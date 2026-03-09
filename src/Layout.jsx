@@ -4,7 +4,7 @@ import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
 import {
   Home, CalendarDays, PawPrint, ClipboardList,
-  LogOut, Menu, X, Settings, ChevronRight
+  LogOut, Menu, X, Settings, ChevronRight, Store, User
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 

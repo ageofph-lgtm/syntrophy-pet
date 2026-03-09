@@ -56,6 +56,7 @@ import ShopOrders from './pages/ShopOrders';
 import ShopAppointmentDetail from './pages/ShopAppointmentDetail';
 import ShopAgenda from './pages/ShopAgenda';
 import ShopSettings from './pages/ShopSettings';
+import Onboarding from './pages/Onboarding';
 import __Layout from './Layout.jsx';
 
 
@@ -69,6 +70,7 @@ export const PAGES = {
     "ShopAppointmentDetail": ShopAppointmentDetail,
     "ShopAgenda": ShopAgenda,
     "ShopSettings": ShopSettings,
+    "Onboarding": Onboarding,
 }
 
 export const pagesConfig = {
