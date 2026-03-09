@@ -35,7 +35,8 @@ export default function Layout({ children, currentPageName }) {
       const u = await base44.auth.me();
       setUser(u);
     } catch (e) {
-      // not logged in
+      base44.auth.redirectToLogin();
+      return;
     }
     setLoading(false);
   };
