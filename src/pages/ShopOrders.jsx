@@ -41,34 +41,24 @@ export default function ShopOrders() {
 
   return (
     <div className="max-w-4xl mx-auto animate-fade-in-up">
-      <h1 className="text-xl font-bold mb-6">Pedidos Pendentes</h1>
+      <h1 className="text-xl font-bold text-stone-900 mb-6">Pedidos Pendentes</h1>
 
       {pending.length === 0 ? (
-        <EmptyState
-          icon={Check}
-          title="Tudo tratado!"
-          description="Não há pedidos pendentes de momento."
-        />
+        <EmptyState icon={Check} title="Tudo tratado!" description="Não há pedidos pendentes de momento." />
       ) : (
         <div className="space-y-3">
           {pending.map((appt) => (
-            <div
-              key={appt.id}
-              className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-2xl p-5 hover:border-[#3A3A3A] transition-colors"
-            >
+            <div key={appt.id} className="bg-white border border-stone-200 rounded-2xl p-5 hover:border-stone-300 hover:shadow-sm transition-all shadow-sm">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-2">
-                    <PawPrint className="w-4 h-4 text-orange-500/60" />
-                    <h3 className="font-bold text-base">{appt.pet_name}</h3>
-                    <span className="text-xs text-[#6B6B6B]">{appt.pet_breed} · {appt.pet_weight_kg}kg</span>
+                    <PawPrint className="w-4 h-4 text-orange-400" />
+                    <h3 className="font-bold text-base text-stone-900">{appt.pet_name}</h3>
+                    <span className="text-xs text-stone-400">{appt.pet_breed} · {appt.pet_weight_kg}kg</span>
                   </div>
-
                   <PetAlertTags behavior={appt.pet_behavior} allergies={appt.pet_allergies} />
-
-                  <p className="text-sm text-[#A0A0A0] mt-2">{appt.service_names}</p>
-
-                  <div className="flex items-center gap-4 mt-2 text-xs text-[#6B6B6B]">
+                  <p className="text-sm text-stone-500 mt-2">{appt.service_names}</p>
+                  <div className="flex items-center gap-4 mt-2 text-xs text-stone-400">
                     <span className="flex items-center gap-1">
                       <CalendarDays className="w-3 h-3" />
                       {appt.scheduled_date && format(new Date(appt.scheduled_date), "d MMM yyyy", { locale: pt })}
@@ -78,34 +68,22 @@ export default function ShopOrders() {
                       {appt.scheduled_time} — {appt.scheduled_end_time}
                     </span>
                   </div>
-
-                  <p className="text-xs text-[#6B6B6B] mt-1">
-                    Tutor: <span className="text-[#A0A0A0]">{appt.owner_name}</span>
+                  <p className="text-xs text-stone-400 mt-1">
+                    Tutor: <span className="text-stone-600">{appt.owner_name}</span>
                   </p>
-
                   {appt.total_price > 0 && (
                     <p className="text-lg font-bold text-orange-500 mt-3">{appt.total_price.toFixed(2)}€</p>
                   )}
                 </div>
-
                 <div className="flex flex-col gap-2 flex-shrink-0">
-                  <Button
-                    onClick={() => handleAccept(appt.id)}
-                    className="bg-green-600 hover:bg-green-700 text-sm"
-                  >
-                    <Check className="w-4 h-4 mr-1" />
-                    Aceitar
+                  <Button onClick={() => handleAccept(appt.id)} className="bg-emerald-500 hover:bg-emerald-600 text-white text-sm">
+                    <Check className="w-4 h-4 mr-1" /> Aceitar
                   </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => handleReject(appt.id)}
-                    className="border-red-500/30 text-red-400 hover:bg-red-500/10 text-sm"
-                  >
-                    <X className="w-4 h-4 mr-1" />
-                    Recusar
+                  <Button variant="outline" onClick={() => handleReject(appt.id)} className="border-red-200 text-red-500 hover:bg-red-50 text-sm">
+                    <X className="w-4 h-4 mr-1" /> Recusar
                   </Button>
                   <Link to={createPageUrl(`ShopAppointmentDetail?id=${appt.id}`)}>
-                    <Button variant="ghost" size="sm" className="text-[#6B6B6B] hover:text-[#A0A0A0] text-xs w-full">
+                    <Button variant="ghost" size="sm" className="text-stone-400 hover:text-stone-600 text-xs w-full">
                       Detalhes <ChevronRight className="w-3 h-3 ml-1" />
                     </Button>
                   </Link>

@@ -17,9 +17,7 @@ export default function TutorHome() {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadData();
-  }, []);
+  useEffect(() => { loadData(); }, []);
 
   const loadData = async () => {
     const u = await base44.auth.me();
@@ -31,7 +29,6 @@ export default function TutorHome() {
     setPets(p);
     setAppointments(a);
     setLoading(false);
-    // Redirect new tutors to onboarding if no phone and no pets
     if (!u.phone && p.length === 0 && u.role !== "admin") {
       navigate(createPageUrl("Onboarding"));
     }
@@ -52,15 +49,15 @@ export default function TutorHome() {
 
   return (
     <div className="max-w-3xl mx-auto space-y-8 animate-fade-in-up">
-      {/* Header Boutique */}
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">
-            Olá, <span className="text-[#F5F5F5]">{user?.full_name?.split(" ")[0]}</span>
+          <h1 className="text-2xl font-bold tracking-tight text-stone-900">
+            Olá, <span className="text-stone-900">{user?.full_name?.split(" ")[0]}</span>
           </h1>
-          <p className="text-sm text-[#A0A0A0] mt-1 font-light">O ecossistema de bem-estar do seu pet.</p>
+          <p className="text-sm text-stone-400 mt-1 font-light">O ecossistema de bem-estar do seu pet.</p>
         </div>
-        <div className="w-10 h-10 rounded-full bg-[#1A1A1A] border border-[#2A2A2A] flex items-center justify-center shadow-[0_0_15px_rgba(249,115,22,0.1)]">
+        <div className="w-10 h-10 rounded-full bg-orange-50 border border-orange-100 flex items-center justify-center">
           <span className="text-orange-500 font-serif text-xl italic">φ</span>
         </div>
       </div>
@@ -69,12 +66,9 @@ export default function TutorHome() {
       {vaccineWarnings.length > 0 && (
         <div className="space-y-2">
           {vaccineWarnings.map((pet) => (
-            <div
-              key={pet.id}
-              className="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/20"
-            >
-              <AlertTriangle className="w-4 h-4 text-red-400 flex-shrink-0" />
-              <p className="text-xs text-red-400">
+            <div key={pet.id} className="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 border border-red-200">
+              <AlertTriangle className="w-4 h-4 text-red-500 flex-shrink-0" />
+              <p className="text-xs text-red-600">
                 <strong>{pet.name}</strong> — Vacina da raiva a vencer em{" "}
                 {format(new Date(pet.rabies_vaccine_expiry), "d MMM yyyy", { locale: pt })}
               </p>
@@ -83,16 +77,16 @@ export default function TutorHome() {
         </div>
       )}
 
-      {/* CTA Premium */}
+      {/* CTA */}
       <Link to={createPageUrl("NewBooking")}>
-        <div className="relative overflow-hidden bg-[#1A1A1A] border border-[#2A2A2A] rounded-2xl p-6 cursor-pointer hover:border-orange-500/50 transition-all duration-500 group">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-orange-500/10 rounded-full blur-3xl -mr-10 -mt-10 group-hover:bg-orange-500/20 transition-all duration-500" />
+        <div className="relative overflow-hidden bg-white border border-stone-200 rounded-2xl p-6 cursor-pointer hover:border-orange-300 hover:shadow-md transition-all duration-300 group shadow-sm">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-orange-100 rounded-full blur-3xl -mr-10 -mt-10 group-hover:bg-orange-200 transition-all duration-500" />
           <div className="flex items-center justify-between relative z-10">
             <div>
-              <h2 className="text-lg font-bold mb-1 text-[#F5F5F5]">Agendar Sessão</h2>
-              <p className="text-xs text-[#A0A0A0]">Nutrição estética e cuidado clínico.</p>
+              <h2 className="text-lg font-bold mb-1 text-stone-900">Agendar Sessão</h2>
+              <p className="text-xs text-stone-400">Nutrição estética e cuidado clínico.</p>
             </div>
-            <div className="w-10 h-10 bg-orange-500 text-white rounded-xl flex items-center justify-center group-hover:scale-110 group-hover:shadow-[0_0_20px_rgba(249,115,22,0.4)] transition-all duration-300">
+            <div className="w-10 h-10 bg-orange-500 text-white rounded-xl flex items-center justify-center group-hover:scale-110 group-hover:shadow-lg transition-all duration-300">
               <Plus className="w-5 h-5" />
             </div>
           </div>
@@ -102,12 +96,11 @@ export default function TutorHome() {
       {/* My Pets */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-base font-bold">Meus Pets</h2>
-          <Link to={createPageUrl("MyPets")} className="text-xs text-orange-500 hover:text-orange-400 flex items-center gap-1">
+          <h2 className="text-base font-bold text-stone-800">Meus Pets</h2>
+          <Link to={createPageUrl("MyPets")} className="text-xs text-orange-500 hover:text-orange-600 flex items-center gap-1 font-medium">
             Ver todos <ArrowRight className="w-3 h-3" />
           </Link>
         </div>
-
         {pets.length === 0 ? (
           <EmptyState
             icon={PawPrint}
@@ -115,7 +108,7 @@ export default function TutorHome() {
             description="Adicione o seu primeiro pet para começar a agendar serviços."
             action={
               <Link to={createPageUrl("MyPets")}>
-                <Button className="bg-orange-500 hover:bg-orange-600">
+                <Button className="bg-orange-500 hover:bg-orange-600 text-white">
                   <Plus className="w-4 h-4 mr-2" />
                   Adicionar Pet
                 </Button>
@@ -134,34 +127,26 @@ export default function TutorHome() {
       {/* Upcoming Appointments */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-base font-bold">Próximas Marcações</h2>
-          <Link to={createPageUrl("MyBookings")} className="text-xs text-orange-500 hover:text-orange-400 flex items-center gap-1">
+          <h2 className="text-base font-bold text-stone-800">Próximas Marcações</h2>
+          <Link to={createPageUrl("MyBookings")} className="text-xs text-orange-500 hover:text-orange-600 flex items-center gap-1 font-medium">
             Ver todas <ArrowRight className="w-3 h-3" />
           </Link>
         </div>
-
         {appointments.length === 0 ? (
-          <EmptyState
-            icon={CalendarDays}
-            title="Sem marcações"
-            description="Agende o próximo tratamento do seu pet."
-          />
+          <EmptyState icon={CalendarDays} title="Sem marcações" description="Agende o próximo tratamento do seu pet." />
         ) : (
           <div className="space-y-2">
             {appointments.map((appt) => (
-              <div
-                key={appt.id}
-                className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-xl p-4 hover:border-[#3A3A3A] transition-colors"
-              >
+              <div key={appt.id} className="bg-white border border-stone-200 rounded-xl p-4 hover:border-stone-300 hover:shadow-sm transition-all shadow-sm">
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
-                    <PawPrint className="w-4 h-4 text-orange-500/60" />
-                    <span className="font-semibold text-sm">{appt.pet_name}</span>
+                    <PawPrint className="w-4 h-4 text-orange-400" />
+                    <span className="font-semibold text-sm text-stone-900">{appt.pet_name}</span>
                   </div>
                   <StatusBadge status={appt.status} />
                 </div>
-                <p className="text-xs text-[#A0A0A0] mb-1">{appt.service_names}</p>
-                <div className="flex items-center gap-2 text-[11px] text-[#6B6B6B]">
+                <p className="text-xs text-stone-500 mb-1">{appt.service_names}</p>
+                <div className="flex items-center gap-2 text-[11px] text-stone-400">
                   <CalendarDays className="w-3 h-3" />
                   {appt.scheduled_date && format(new Date(appt.scheduled_date), "d MMM", { locale: pt })} · {appt.scheduled_time}
                   {appt.professional_name && ` · ${appt.professional_name}`}

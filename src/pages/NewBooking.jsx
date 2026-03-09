@@ -39,7 +39,6 @@ export default function NewBooking() {
   const [selectedTime, setSelectedTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [selectedProfessional, setSelectedProfessional] = useState("any");
-
   const [submitting, setSubmitting] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -56,13 +55,7 @@ export default function NewBooking() {
     setPets(p);
     setServices(s);
     setProfessionals(pr);
-
-    // Load last grooming prefs
-    const lastAppt = await base44.entities.Appointments.filter(
-      { owner_email: u.email },
-      "-created_date",
-      1
-    );
+    const lastAppt = await base44.entities.Appointments.filter({ owner_email: u.email }, "-created_date", 1);
     if (lastAppt.length > 0 && lastAppt[0].tosquia_corpo) {
       setLastGroomingPrefs({
         corpo: lastAppt[0].tosquia_corpo,
@@ -79,7 +72,6 @@ export default function NewBooking() {
   const hasTosquia = selectedServices.some((s) => s.category === "tosquia");
   const duration = calculateDuration(selectedServices, selectedPet);
   const totalPrice = calculatePrice(selectedServices);
-
   const baseServices = services.filter((s) => !s.is_addon);
   const addonServices = services.filter((s) => s.is_addon);
 
@@ -102,7 +94,6 @@ export default function NewBooking() {
   const canGoNext = () => {
     if (step === 0) return !!selectedPet;
     if (step === 1) return selectedServices.length > 0;
-    if (step === steps.indexOf("Tosquia") && hasTosquia) return true;
     if (steps[step] === "Horário") return selectedDate && selectedTime;
     return true;
   };
@@ -154,78 +145,71 @@ export default function NewBooking() {
     <div className="max-w-3xl mx-auto animate-fade-in-up">
       {/* Header */}
       <div className="flex items-center gap-3 mb-6">
-        <button onClick={() => navigate(-1)} className="p-2 rounded-xl bg-[#1A1A1A] border border-[#2A2A2A] hover:border-[#3A3A3A] transition-colors">
-          <ArrowLeft className="w-4 h-4 text-[#A0A0A0]" />
+        <button onClick={() => navigate(-1)} className="p-2 rounded-xl bg-white border border-stone-200 hover:border-stone-300 shadow-sm transition-colors">
+          <ArrowLeft className="w-4 h-4 text-stone-500" />
         </button>
-        <h1 className="text-xl font-bold">Nova Marcação</h1>
+        <h1 className="text-xl font-bold text-stone-900">Nova Marcação</h1>
       </div>
 
       {/* Step Indicator */}
       <div className="flex items-center gap-2 mb-8 overflow-x-auto pb-2">
         {steps.map((s, i) => (
           <div key={s} className="flex items-center gap-2">
-            <div className={`
-              w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0
-              ${i < step ? "bg-orange-500 text-white" : i === step ? "bg-orange-500/20 text-orange-500 ring-2 ring-orange-500" : "bg-[#1A1A1A] text-[#6B6B6B]"}
-            `}>
+            <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0
+              ${i < step ? "bg-orange-500 text-white" : i === step ? "bg-orange-100 text-orange-600 ring-2 ring-orange-400" : "bg-stone-100 text-stone-400"}`}>
               {i < step ? <Check className="w-3 h-3" /> : i + 1}
             </div>
-            <span className={`text-xs whitespace-nowrap ${i === step ? "text-[#F5F5F5] font-medium" : "text-[#6B6B6B]"}`}>
-              {s}
-            </span>
-            {i < steps.length - 1 && <div className="w-6 h-px bg-[#2A2A2A] flex-shrink-0" />}
+            <span className={`text-xs whitespace-nowrap ${i === step ? "text-stone-900 font-medium" : "text-stone-400"}`}>{s}</span>
+            {i < steps.length - 1 && <div className="w-6 h-px bg-stone-200 flex-shrink-0" />}
           </div>
         ))}
       </div>
 
       {/* Step Content */}
       <div className="mb-8">
-        {/* Step 0: Select Pet */}
+        {/* Pet */}
         {step === 0 && (
           <div>
-            <h2 className="text-base font-semibold mb-4">Selecione o Pet</h2>
+            <h2 className="text-base font-semibold text-stone-800 mb-4">Selecione o Pet</h2>
             <div className="grid gap-3 sm:grid-cols-2">
               {pets.map((pet) => (
-                <PetCard
-                  key={pet.id}
-                  pet={pet}
-                  onSelect={setSelectedPet}
-                  selected={selectedPet?.id === pet.id}
-                />
+                <PetCard key={pet.id} pet={pet} onSelect={setSelectedPet} selected={selectedPet?.id === pet.id} />
               ))}
             </div>
             {pets.length === 0 && (
               <div className="text-center py-10">
-                <PawPrint className="w-10 h-10 text-[#6B6B6B] mx-auto mb-3" />
-                <p className="text-sm text-[#6B6B6B]">Precisa de adicionar um pet primeiro.</p>
+                <PawPrint className="w-10 h-10 text-stone-300 mx-auto mb-3" />
+                <p className="text-sm text-stone-400">Precisa de adicionar um pet primeiro.</p>
               </div>
             )}
           </div>
         )}
 
-        {/* Step 1: Select Services */}
+        {/* Services */}
         {step === 1 && (
           <div>
-            <h2 className="text-base font-semibold mb-1">Serviços</h2>
-            <p className="text-xs text-[#6B6B6B] mb-4">Selecione um ou mais serviços</p>
-
-            <h3 className="text-xs font-semibold text-[#A0A0A0] uppercase tracking-wider mb-3">Serviços Base</h3>
+            <h2 className="text-base font-semibold text-stone-800 mb-1">Serviços</h2>
+            <p className="text-xs text-stone-400 mb-4">Selecione um ou mais serviços</p>
+            <h3 className="text-xs font-semibold text-stone-400 uppercase tracking-wider mb-3">Serviços Base</h3>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 mb-6">
               {baseServices.map((s) => (
                 <ServiceCard key={s.id} service={s} selected={selectedServices.some((sel) => sel.id === s.id)} onToggle={toggleService} />
               ))}
             </div>
-
-            <h3 className="text-xs font-semibold text-[#A0A0A0] uppercase tracking-wider mb-3">Adicionais</h3>
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {addonServices.map((s) => (
-                <ServiceCard key={s.id} service={s} selected={selectedServices.some((sel) => sel.id === s.id)} onToggle={toggleService} />
-              ))}
-            </div>
+            {addonServices.length > 0 && (
+              <>
+                <h3 className="text-xs font-semibold text-stone-400 uppercase tracking-wider mb-3">Adicionais</h3>
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                  {addonServices.map((s) => (
+                    <ServiceCard key={s.id} service={s} selected={selectedServices.some((sel) => sel.id === s.id)} onToggle={toggleService} />
+                  ))}
+                </div>
+              </>
+            )}
           </div>
         )}
 
-        {/* Step: Grooming (conditional) */}
+        {/* Grooming */}
         {steps[step] === "Tosquia" && (
           <GroomingSelector
             preferences={groomingPrefs}
@@ -235,38 +219,35 @@ export default function NewBooking() {
           />
         )}
 
-        {/* Step: Time Slot */}
+        {/* Time Slot */}
         {steps[step] === "Horário" && (
           <div>
-            <h2 className="text-xl font-bold mb-2">Sintrofia da Agenda</h2>
-
-            {/* Transparent Duration Breakdown */}
-            <div className="mb-6 p-4 rounded-xl bg-[#1A1A1A] border border-[#2A2A2A]">
-              <p className="text-[10px] text-[#A0A0A0] uppercase tracking-wider mb-3 font-semibold">Cálculo de Duração Inteligente</p>
+            <h2 className="text-xl font-bold text-stone-900 mb-2">Sintrofia da Agenda</h2>
+            <div className="mb-6 p-4 rounded-xl bg-white border border-stone-200 shadow-sm">
+              <p className="text-[10px] text-stone-400 uppercase tracking-wider mb-3 font-semibold">Cálculo de Duração Inteligente</p>
               <ul className="space-y-1.5 mb-3">
-                <li className="flex justify-between text-sm text-[#F5F5F5]">
+                <li className="flex justify-between text-sm text-stone-700">
                   <span>Tempo Base dos Serviços</span>
                   <span className="font-medium">{selectedServices.reduce((sum, s) => sum + (s.base_duration_minutes || 0), 0)} min</span>
                 </li>
                 {selectedPet?.weight_kg > 20 && (
-                  <li className="flex justify-between text-sm text-orange-400">
+                  <li className="flex justify-between text-sm text-orange-500">
                     <span>Ajuste de Porte ({selectedPet.weight_kg}kg)</span>
                     <span>+{selectedPet.weight_kg > 40 ? "45" : "30"} min</span>
                   </li>
                 )}
                 {(selectedPet?.behavior === "agressivo" || selectedPet?.behavior === "agitado") && (
-                  <li className="flex justify-between text-sm text-amber-400">
+                  <li className="flex justify-between text-sm text-amber-500">
                     <span>Atenção Especial ({selectedPet.behavior})</span>
                     <span>+15 min</span>
                   </li>
                 )}
               </ul>
-              <div className="pt-2 border-t border-[#2A2A2A] flex justify-between font-bold text-orange-500">
+              <div className="pt-2 border-t border-stone-100 flex justify-between font-bold text-orange-500">
                 <span>Tempo Total Alocado</span>
                 <span>{duration} min</span>
               </div>
             </div>
-
             <TimeSlotPicker
               duration={duration}
               selectedDate={selectedDate}
@@ -279,7 +260,7 @@ export default function NewBooking() {
           </div>
         )}
 
-        {/* Step: Summary */}
+        {/* Summary */}
         {steps[step] === "Resumo" && (
           <BookingSummary
             pet={selectedPet}
@@ -296,32 +277,19 @@ export default function NewBooking() {
       </div>
 
       {/* Navigation */}
-      <div className="flex items-center justify-between sticky bottom-0 bg-[#111111] py-4 border-t border-[#2A2A2A] -mx-4 px-4 md:-mx-6 md:px-6 lg:-mx-8 lg:px-8">
-        <Button
-          variant="outline"
-          onClick={() => setStep(step - 1)}
-          disabled={step === 0}
-          className="border-[#2A2A2A] text-[#A0A0A0] hover:bg-[#1A1A1A]"
-        >
+      <div className="flex items-center justify-between sticky bottom-0 bg-[#F7F5F2] py-4 border-t border-stone-200 -mx-4 px-4 md:-mx-6 md:px-6 lg:-mx-8 lg:px-8">
+        <Button variant="outline" onClick={() => setStep(step - 1)} disabled={step === 0} className="border-stone-200 text-stone-600 hover:bg-stone-50">
           <ArrowLeft className="w-4 h-4 mr-2" />
           Anterior
         </Button>
 
         {steps[step] === "Resumo" ? (
-          <Button
-            onClick={handleSubmit}
-            disabled={submitting}
-            className="bg-orange-500 hover:bg-orange-600 pulse-orange"
-          >
+          <Button onClick={handleSubmit} disabled={submitting} className="bg-orange-500 hover:bg-orange-600 text-white pulse-orange">
             {submitting ? "A enviar..." : "Confirmar Pedido"}
             <Check className="w-4 h-4 ml-2" />
           </Button>
         ) : (
-          <Button
-            onClick={() => setStep(step + 1)}
-            disabled={!canGoNext()}
-            className="bg-orange-500 hover:bg-orange-600"
-          >
+          <Button onClick={() => setStep(step + 1)} disabled={!canGoNext()} className="bg-orange-500 hover:bg-orange-600 text-white">
             Próximo
             <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
