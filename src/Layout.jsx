@@ -132,23 +132,36 @@ export default function Layout({ children, currentPageName }) {
 
           {/* User Footer */}
           {user && (
-            <div className="px-4 py-4 border-t border-[#2A2A2A]">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-8 h-8 rounded-full bg-orange-500/20 flex items-center justify-center">
+            <div className="px-4 py-4 border-t border-[#2A2A2A] space-y-2">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-orange-500/20 flex items-center justify-center flex-shrink-0">
                   <span className="text-orange-500 text-xs font-bold">
                     {user.full_name?.charAt(0)?.toUpperCase() || "U"}
                   </span>
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-medium truncate">{user.full_name}</p>
-                  <p className="text-[10px] text-[#6B6B6B] truncate">{user.email}</p>
+                  <p className="text-[10px] text-[#6B6B6B] truncate">{isLojista ? "Lojista" : "Tutor"}</p>
                 </div>
               </div>
+
+              {/* Profile Switcher - only for admins */}
+              {user.role === "admin" && (
+                <Link
+                  to={createPageUrl(isLojista ? "TutorHome" : "ShopDashboard")}
+                  onClick={() => setSidebarOpen(false)}
+                  className="flex items-center gap-2 px-3 py-2 rounded-xl border border-[#2A2A2A] hover:border-orange-500/40 hover:bg-orange-500/5 transition-all text-xs text-[#A0A0A0] hover:text-orange-400"
+                >
+                  {isLojista ? <User className="w-3 h-3" /> : <Store className="w-3 h-3" />}
+                  {isLojista ? "Ver como Tutor" : "Ir para Loja"}
+                </Link>
+              )}
+
               <Button
                 variant="ghost"
                 size="sm"
                 className="w-full justify-start text-[#6B6B6B] hover:text-red-400 hover:bg-red-500/10 text-xs"
-                onClick={() => base44.auth.logout()}
+                onClick={() => base44.auth.redirectToLogin()}
               >
                 <LogOut className="w-3 h-3 mr-2" />
                 Sair
