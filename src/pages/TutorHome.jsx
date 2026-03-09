@@ -11,6 +11,7 @@ import StatusBadge from "../components/shared/StatusBadge";
 import EmptyState from "../components/shared/EmptyState";
 
 export default function TutorHome() {
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [pets, setPets] = useState([]);
   const [appointments, setAppointments] = useState([]);
@@ -30,6 +31,10 @@ export default function TutorHome() {
     setPets(p);
     setAppointments(a);
     setLoading(false);
+    // Redirect new tutors to onboarding if no phone and no pets
+    if (!u.phone && p.length === 0 && u.role !== "admin") {
+      navigate(createPageUrl("Onboarding"));
+    }
   };
 
   if (loading) {
