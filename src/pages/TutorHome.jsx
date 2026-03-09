@@ -83,16 +83,17 @@ export default function TutorHome() {
         </div>
       )}
 
-      {/* CTA */}
+      {/* CTA Premium */}
       <Link to={createPageUrl("NewBooking")}>
-        <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-2xl p-6 text-white cursor-pointer hover:from-orange-600 hover:to-orange-700 transition-all duration-300 group">
-          <div className="flex items-center justify-between">
+        <div className="relative overflow-hidden bg-[#1A1A1A] border border-[#2A2A2A] rounded-2xl p-6 cursor-pointer hover:border-orange-500/50 transition-all duration-500 group">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-orange-500/10 rounded-full blur-3xl -mr-10 -mt-10 group-hover:bg-orange-500/20 transition-all duration-500" />
+          <div className="flex items-center justify-between relative z-10">
             <div>
-              <h2 className="text-lg font-bold mb-1">Nova Marcação</h2>
-              <p className="text-sm text-orange-100">Agende o SPA para o seu pet</p>
+              <h2 className="text-lg font-bold mb-1 text-[#F5F5F5]">Agendar Sessão</h2>
+              <p className="text-xs text-[#A0A0A0]">Nutrição estética e cuidado clínico.</p>
             </div>
-            <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
-              <Plus className="w-6 h-6" />
+            <div className="w-10 h-10 bg-orange-500 text-white rounded-xl flex items-center justify-center group-hover:scale-110 group-hover:shadow-[0_0_20px_rgba(249,115,22,0.4)] transition-all duration-300">
+              <Plus className="w-5 h-5" />
             </div>
           </div>
         </div>
