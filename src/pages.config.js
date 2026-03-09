@@ -51,6 +51,11 @@ import TutorHome from './pages/TutorHome';
 import MyPets from './pages/MyPets';
 import NewBooking from './pages/NewBooking';
 import MyBookings from './pages/MyBookings';
+import ShopDashboard from './pages/ShopDashboard';
+import ShopOrders from './pages/ShopOrders';
+import ShopAppointmentDetail from './pages/ShopAppointmentDetail';
+import ShopAgenda from './pages/ShopAgenda';
+import ShopSettings from './pages/ShopSettings';
 import __Layout from './Layout.jsx';
 
 
@@ -59,6 +64,11 @@ export const PAGES = {
     "MyPets": MyPets,
     "NewBooking": NewBooking,
     "MyBookings": MyBookings,
+    "ShopDashboard": ShopDashboard,
+    "ShopOrders": ShopOrders,
+    "ShopAppointmentDetail": ShopAppointmentDetail,
+    "ShopAgenda": ShopAgenda,
+    "ShopSettings": ShopSettings,
 }
 
 export const pagesConfig = {
