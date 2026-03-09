@@ -52,12 +52,17 @@ export default function TutorHome() {
 
   return (
     <div className="max-w-3xl mx-auto space-y-8 animate-fade-in-up">
-      {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold">
-          Olá, <span className="text-orange-500">{user?.full_name?.split(" ")[0]}</span>
-        </h1>
-        <p className="text-sm text-[#6B6B6B] mt-1">Bem-vindo ao Syntrophy Pet</p>
+      {/* Header Boutique */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">
+            Olá, <span className="text-[#F5F5F5]">{user?.full_name?.split(" ")[0]}</span>
+          </h1>
+          <p className="text-sm text-[#A0A0A0] mt-1 font-light">O ecossistema de bem-estar do seu pet.</p>
+        </div>
+        <div className="w-10 h-10 rounded-full bg-[#1A1A1A] border border-[#2A2A2A] flex items-center justify-center shadow-[0_0_15px_rgba(249,115,22,0.1)]">
+          <span className="text-orange-500 font-serif text-xl italic">φ</span>
+        </div>
       </div>
 
       {/* Vaccine Alerts */}

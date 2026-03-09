@@ -238,10 +238,35 @@ export default function NewBooking() {
         {/* Step: Time Slot */}
         {steps[step] === "Horário" && (
           <div>
-            <h2 className="text-base font-semibold mb-1">Agendamento</h2>
-            <p className="text-xs text-[#6B6B6B] mb-4">
-              Duração estimada: <span className="text-orange-400 font-medium">{duration} min</span>
-            </p>
+            <h2 className="text-xl font-bold mb-2">Sintrofia da Agenda</h2>
+
+            {/* Transparent Duration Breakdown */}
+            <div className="mb-6 p-4 rounded-xl bg-[#1A1A1A] border border-[#2A2A2A]">
+              <p className="text-[10px] text-[#A0A0A0] uppercase tracking-wider mb-3 font-semibold">Cálculo de Duração Inteligente</p>
+              <ul className="space-y-1.5 mb-3">
+                <li className="flex justify-between text-sm text-[#F5F5F5]">
+                  <span>Tempo Base dos Serviços</span>
+                  <span className="font-medium">{selectedServices.reduce((sum, s) => sum + (s.base_duration_minutes || 0), 0)} min</span>
+                </li>
+                {selectedPet?.weight_kg > 20 && (
+                  <li className="flex justify-between text-sm text-orange-400">
+                    <span>Ajuste de Porte ({selectedPet.weight_kg}kg)</span>
+                    <span>+{selectedPet.weight_kg > 40 ? "45" : "30"} min</span>
+                  </li>
+                )}
+                {(selectedPet?.behavior === "agressivo" || selectedPet?.behavior === "agitado") && (
+                  <li className="flex justify-between text-sm text-amber-400">
+                    <span>Atenção Especial ({selectedPet.behavior})</span>
+                    <span>+15 min</span>
+                  </li>
+                )}
+              </ul>
+              <div className="pt-2 border-t border-[#2A2A2A] flex justify-between font-bold text-orange-500">
+                <span>Tempo Total Alocado</span>
+                <span>{duration} min</span>
+              </div>
+            </div>
+
             <TimeSlotPicker
               duration={duration}
               selectedDate={selectedDate}
