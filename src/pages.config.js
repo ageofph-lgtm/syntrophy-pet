@@ -47,30 +47,30 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
-import TutorHome from './pages/TutorHome';
+import MyBookings from './pages/MyBookings';
 import MyPets from './pages/MyPets';
 import NewBooking from './pages/NewBooking';
-import MyBookings from './pages/MyBookings';
+import Onboarding from './pages/Onboarding';
+import ShopAgenda from './pages/ShopAgenda';
+import ShopAppointmentDetail from './pages/ShopAppointmentDetail';
 import ShopDashboard from './pages/ShopDashboard';
 import ShopOrders from './pages/ShopOrders';
-import ShopAppointmentDetail from './pages/ShopAppointmentDetail';
-import ShopAgenda from './pages/ShopAgenda';
 import ShopSettings from './pages/ShopSettings';
-import Onboarding from './pages/Onboarding';
+import TutorHome from './pages/TutorHome';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
-    "TutorHome": TutorHome,
+    "MyBookings": MyBookings,
     "MyPets": MyPets,
     "NewBooking": NewBooking,
-    "MyBookings": MyBookings,
+    "Onboarding": Onboarding,
+    "ShopAgenda": ShopAgenda,
+    "ShopAppointmentDetail": ShopAppointmentDetail,
     "ShopDashboard": ShopDashboard,
     "ShopOrders": ShopOrders,
-    "ShopAppointmentDetail": ShopAppointmentDetail,
-    "ShopAgenda": ShopAgenda,
     "ShopSettings": ShopSettings,
-    "Onboarding": Onboarding,
+    "TutorHome": TutorHome,
 }
 
 export const pagesConfig = {

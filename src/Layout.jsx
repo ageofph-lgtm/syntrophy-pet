@@ -26,9 +26,7 @@ export default function Layout({ children, currentPageName }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadUser();
-  }, []);
+  useEffect(() => { loadUser(); }, []);
 
   const loadUser = async () => {
     try {
@@ -43,10 +41,10 @@ export default function Layout({ children, currentPageName }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#111111] flex items-center justify-center">
+      <div className="min-h-screen bg-[#F7F5F2] flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <div className="w-10 h-10 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
-          <span className="text-[#A0A0A0] text-sm">A carregar...</span>
+          <span className="text-stone-400 text-sm">A carregar...</span>
         </div>
       </div>
     );
@@ -56,51 +54,50 @@ export default function Layout({ children, currentPageName }) {
   const navItems = isLojista ? LOJISTA_NAV : TUTOR_NAV;
 
   return (
-    <div className="min-h-screen bg-[#111111] text-[#F5F5F5]">
+    <div className="min-h-screen bg-[#F7F5F2] text-stone-900">
       {/* Mobile Header */}
-      <header className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-[#161616]/95 backdrop-blur-md border-b border-[#2A2A2A] px-4 py-3 flex items-center justify-between">
+      <header className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-stone-200 px-4 py-3 flex items-center justify-between shadow-sm">
         <button onClick={() => setSidebarOpen(true)} className="p-1">
-          <Menu className="w-5 h-5 text-[#A0A0A0]" />
+          <Menu className="w-5 h-5 text-stone-500" />
         </button>
         <div className="flex items-center gap-2">
-          <span className="text-orange-500 font-bold text-lg">φ</span>
-          <span className="font-semibold text-sm tracking-wide">Syntrophy</span>
+          <div className="w-7 h-7 bg-orange-50 rounded-lg flex items-center justify-center">
+            <span className="text-orange-500 font-bold text-base">φ</span>
+          </div>
+          <span className="font-semibold text-sm tracking-wide text-stone-800">Syntrophy</span>
         </div>
         <div className="w-7" />
       </header>
 
       {/* Mobile Overlay */}
       {sidebarOpen && (
-        <div
-          className="lg:hidden fixed inset-0 bg-black/60 z-50"
-          onClick={() => setSidebarOpen(false)}
-        />
+        <div className="lg:hidden fixed inset-0 bg-black/30 z-50" onClick={() => setSidebarOpen(false)} />
       )}
 
       {/* Sidebar */}
       <aside className={`
         fixed top-0 left-0 h-full z-50
-        w-64 bg-[#161616] border-r border-[#2A2A2A]
+        w-64 bg-white border-r border-stone-200
         transform transition-transform duration-300 ease-out
         lg:translate-x-0
         ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
       `}>
         <div className="flex flex-col h-full">
           {/* Logo */}
-          <div className="px-6 py-6 flex items-center justify-between">
+          <div className="px-6 py-6 flex items-center justify-between border-b border-stone-100">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 bg-orange-500/10 rounded-xl flex items-center justify-center">
+              <div className="w-9 h-9 bg-orange-50 rounded-xl flex items-center justify-center border border-orange-100">
                 <span className="text-orange-500 font-bold text-xl">φ</span>
               </div>
               <div>
-                <h1 className="font-bold text-sm tracking-wide">Syntrophy</h1>
-                <p className="text-[10px] text-[#6B6B6B] uppercase tracking-widest">
+                <h1 className="font-bold text-sm tracking-wide text-stone-900">Syntrophy</h1>
+                <p className="text-[10px] text-stone-400 uppercase tracking-widest">
                   {isLojista ? "Loja" : "Pet Care"}
                 </p>
               </div>
             </div>
             <button onClick={() => setSidebarOpen(false)} className="lg:hidden p-1">
-              <X className="w-4 h-4 text-[#6B6B6B]" />
+              <X className="w-4 h-4 text-stone-400" />
             </button>
           </div>
 
@@ -117,14 +114,14 @@ export default function Layout({ children, currentPageName }) {
                     flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium
                     transition-all duration-200
                     ${isActive
-                      ? "bg-orange-500/10 text-orange-500"
-                      : "text-[#A0A0A0] hover:text-[#F5F5F5] hover:bg-[#1A1A1A]"
+                      ? "bg-orange-50 text-orange-600 border border-orange-100"
+                      : "text-stone-600 hover:text-stone-900 hover:bg-stone-50"
                     }
                   `}
                 >
                   <item.icon className="w-4 h-4" />
                   {item.name}
-                  {isActive && <ChevronRight className="w-3 h-3 ml-auto" />}
+                  {isActive && <ChevronRight className="w-3 h-3 ml-auto text-orange-400" />}
                 </Link>
               );
             })}
@@ -132,25 +129,24 @@ export default function Layout({ children, currentPageName }) {
 
           {/* User Footer */}
           {user && (
-            <div className="px-4 py-4 border-t border-[#2A2A2A] space-y-2">
+            <div className="px-4 py-4 border-t border-stone-100 space-y-2">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-orange-500/20 flex items-center justify-center flex-shrink-0">
-                  <span className="text-orange-500 text-xs font-bold">
+                <div className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center flex-shrink-0">
+                  <span className="text-orange-600 text-xs font-bold">
                     {user.full_name?.charAt(0)?.toUpperCase() || "U"}
                   </span>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-medium truncate">{user.full_name}</p>
-                  <p className="text-[10px] text-[#6B6B6B] truncate">{isLojista ? "Lojista" : "Tutor"}</p>
+                  <p className="text-xs font-semibold text-stone-800 truncate">{user.full_name}</p>
+                  <p className="text-[10px] text-stone-400 truncate">{isLojista ? "Lojista" : "Tutor"}</p>
                 </div>
               </div>
 
-              {/* Profile Switcher - only for admins */}
               {user.role === "admin" && (
                 <Link
                   to={createPageUrl(isLojista ? "TutorHome" : "ShopDashboard")}
                   onClick={() => setSidebarOpen(false)}
-                  className="flex items-center gap-2 px-3 py-2 rounded-xl border border-[#2A2A2A] hover:border-orange-500/40 hover:bg-orange-500/5 transition-all text-xs text-[#A0A0A0] hover:text-orange-400"
+                  className="flex items-center gap-2 px-3 py-2 rounded-xl border border-stone-200 hover:border-orange-200 hover:bg-orange-50 transition-all text-xs text-stone-500 hover:text-orange-500"
                 >
                   {isLojista ? <User className="w-3 h-3" /> : <Store className="w-3 h-3" />}
                   {isLojista ? "Ver como Tutor" : "Ir para Loja"}
@@ -160,7 +156,7 @@ export default function Layout({ children, currentPageName }) {
               <Button
                 variant="ghost"
                 size="sm"
-                className="w-full justify-start text-[#6B6B6B] hover:text-red-400 hover:bg-red-500/10 text-xs"
+                className="w-full justify-start text-stone-400 hover:text-red-500 hover:bg-red-50 text-xs"
                 onClick={() => base44.auth.redirectToLogin()}
               >
                 <LogOut className="w-3 h-3 mr-2" />

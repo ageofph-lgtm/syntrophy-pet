@@ -5,26 +5,25 @@
 :root {
   --orange-accent: #F97316;
   --orange-hover: #EA580C;
-  --dark-bg: #111111;
-  --dark-card: #1A1A1A;
-  --dark-card-hover: #222222;
-  --dark-border: #2A2A2A;
-  --dark-surface: #161616;
-  --text-primary: #F5F5F5;
-  --text-secondary: #A0A0A0;
-  --text-muted: #6B6B6B;
+  --bg: #F7F5F2;
+  --card: #FFFFFF;
+  --surface: #F0EDE8;
+  --border: #E5E2DD;
+  --text-primary: #1A1A1A;
+  --text-secondary: #78716C;
+  --text-muted: #A8A29E;
 }
 
 body {
-  background-color: var(--dark-bg);
+  background-color: var(--bg);
   color: var(--text-primary);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 /* Scrollbar */
 ::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--dark-bg); }
-::-webkit-scrollbar-thumb { background: var(--dark-border); border-radius: 3px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
 /* Custom animations */
@@ -44,10 +43,4 @@ body {
 
 .pulse-orange {
   animation: pulse-orange 2s infinite;
-}
-
-/* Dark mode overrides for shadcn */
-.dark-card {
-  background: var(--dark-card);
-  border-color: var(--dark-border);
 }
