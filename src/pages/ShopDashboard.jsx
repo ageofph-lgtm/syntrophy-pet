@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { format } from "date-fns";
 import { pt } from "date-fns/locale";
-import { CalendarDays, Clock, PawPrint, ChevronRight, TrendingUp, Euro, ClipboardList } from "lucide-react";
+import { CalendarDays, PawPrint, ChevronRight, TrendingUp, Euro, ClipboardList } from "lucide-react";
 import StatusBadge from "../components/shared/StatusBadge";
 import PetAlertTags from "../components/shared/PetAlertTags";
 
@@ -30,13 +30,11 @@ export default function ShopDashboard() {
     setLoading(false);
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
-  }
+  if (loading) return (
+    <div className="flex items-center justify-center py-20">
+      <div className="w-8 h-8 border-2 border-violet-600 border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
 
   return (
     <div className="max-w-5xl mx-auto animate-fade-in-up">
@@ -47,7 +45,7 @@ export default function ShopDashboard() {
         </div>
         {pendingCount > 0 && (
           <Link to={createPageUrl("ShopOrders")}>
-            <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-orange-50 border border-orange-200 text-orange-600 text-sm font-medium hover:bg-orange-100 transition-colors">
+            <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-stone-950 text-white text-sm font-medium hover:bg-stone-800 transition-colors">
               <ClipboardList className="w-4 h-4" />
               {pendingCount} pedido{pendingCount > 1 ? "s" : ""} pendente{pendingCount > 1 ? "s" : ""}
               <ChevronRight className="w-3 h-3" />
@@ -56,7 +54,6 @@ export default function ShopDashboard() {
         )}
       </div>
 
-      {/* Stats */}
       <div className="grid grid-cols-3 gap-3 mb-8">
         <div className="bg-white border border-stone-200 rounded-2xl p-4 shadow-sm">
           <div className="w-8 h-8 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-3">
@@ -73,8 +70,8 @@ export default function ShopDashboard() {
           <p className="text-[11px] text-stone-400">Concluídos</p>
         </div>
         <div className="bg-white border border-stone-200 rounded-2xl p-4 shadow-sm">
-          <div className="w-8 h-8 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center mb-3">
-            <Euro className="w-4 h-4 text-orange-500" />
+          <div className="w-8 h-8 rounded-xl bg-violet-50 border border-violet-100 flex items-center justify-center mb-3">
+            <Euro className="w-4 h-4 text-violet-600" />
           </div>
           <p className="text-2xl font-bold text-stone-900">{stats.revenue.toFixed(0)}€</p>
           <p className="text-[11px] text-stone-400">Receita Hoje</p>
@@ -95,13 +92,13 @@ export default function ShopDashboard() {
                 ${appt.pet_behavior === "agressivo" ? "border-l-4 border-l-red-400 border-stone-200" : "border-stone-200 hover:border-stone-300"}`}>
                 <div className="flex items-start justify-between">
                   <div className="flex items-start gap-3 flex-1 min-w-0">
-                    <div className="bg-stone-50 border border-stone-200 rounded-xl px-3 py-2 text-center flex-shrink-0 min-w-[70px]">
-                      <p className="text-sm font-bold text-orange-500">{appt.scheduled_time}</p>
+                    <div className="bg-violet-50 border border-violet-100 rounded-xl px-3 py-2 text-center flex-shrink-0 min-w-[70px]">
+                      <p className="text-sm font-bold text-violet-700">{appt.scheduled_time}</p>
                       <p className="text-[9px] text-stone-400">{appt.scheduled_end_time}</p>
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
-                        <PawPrint className="w-3.5 h-3.5 text-orange-400" />
+                        <PawPrint className="w-3.5 h-3.5 text-stone-400" />
                         <h3 className="font-semibold text-sm text-stone-900">{appt.pet_name}</h3>
                         <span className="text-[10px] text-stone-400">{appt.pet_breed} · {appt.pet_weight_kg}kg</span>
                       </div>

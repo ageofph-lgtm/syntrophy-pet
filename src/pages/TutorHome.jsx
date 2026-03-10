@@ -26,25 +26,18 @@ export default function TutorHome() {
       base44.entities.Pets.filter({ owner_email: u.email }, "-created_date", 10),
       base44.entities.Appointments.filter({ owner_email: u.email, status: { $ne: "cancelado" } }, "-scheduled_date", 5),
     ]);
-    setPets(p);
-    setAppointments(a);
-    setLoading(false);
-    if (!u.phone && p.length === 0 && u.role !== "admin") {
-      navigate(createPageUrl("Onboarding"));
-    }
+    setPets(p); setAppointments(a); setLoading(false);
+    if (!u.phone && p.length === 0 && u.role !== "admin") navigate(createPageUrl("Onboarding"));
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
-  }
+  if (loading) return (
+    <div className="flex items-center justify-center py-20">
+      <div className="w-8 h-8 border-2 border-violet-600 border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
 
   const vaccineWarnings = pets.filter((p) =>
-    p.rabies_vaccine_expiry &&
-    new Date(p.rabies_vaccine_expiry) < new Date(Date.now() + 15 * 24 * 60 * 60 * 1000)
+    p.rabies_vaccine_expiry && new Date(p.rabies_vaccine_expiry) < new Date(Date.now() + 15 * 24 * 60 * 60 * 1000)
   );
 
   return (
@@ -53,12 +46,12 @@ export default function TutorHome() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-stone-900">
-            Olá, <span className="text-stone-900">{user?.full_name?.split(" ")[0]}</span>
+            Olá, {user?.full_name?.split(" ")[0]} 👋
           </h1>
-          <p className="text-sm text-stone-400 mt-1 font-light">O ecossistema de bem-estar do seu pet.</p>
+          <p className="text-sm text-stone-400 mt-1">O ecossistema de bem-estar do seu pet.</p>
         </div>
-        <div className="w-10 h-10 rounded-full bg-orange-50 border border-orange-100 flex items-center justify-center">
-          <span className="text-orange-500 font-serif text-xl italic">φ</span>
+        <div className="w-10 h-10 rounded-full bg-violet-50 border border-violet-100 flex items-center justify-center">
+          <span className="text-violet-600 font-serif text-xl italic font-bold">φ</span>
         </div>
       </div>
 
@@ -79,14 +72,15 @@ export default function TutorHome() {
 
       {/* CTA */}
       <Link to={createPageUrl("NewBooking")}>
-        <div className="relative overflow-hidden bg-white border border-stone-200 rounded-2xl p-6 cursor-pointer hover:border-orange-300 hover:shadow-md transition-all duration-300 group shadow-sm">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-orange-100 rounded-full blur-3xl -mr-10 -mt-10 group-hover:bg-orange-200 transition-all duration-500" />
+        <div className="relative overflow-hidden bg-stone-950 rounded-2xl p-6 cursor-pointer group">
+          <div className="absolute inset-0 bg-gradient-to-br from-violet-600/20 to-transparent" />
+          <div className="absolute top-0 right-0 w-40 h-40 bg-violet-500/10 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-violet-500/20 transition-all duration-500" />
           <div className="flex items-center justify-between relative z-10">
             <div>
-              <h2 className="text-lg font-bold mb-1 text-stone-900">Agendar Sessão</h2>
-              <p className="text-xs text-stone-400">Nutrição estética e cuidado clínico.</p>
+              <h2 className="text-lg font-bold mb-1 text-white">Agendar Sessão</h2>
+              <p className="text-xs text-stone-400">Banho · Tosquia · Spa · e mais</p>
             </div>
-            <div className="w-10 h-10 bg-orange-500 text-white rounded-xl flex items-center justify-center group-hover:scale-110 group-hover:shadow-lg transition-all duration-300">
+            <div className="w-10 h-10 bg-violet-600 text-white rounded-xl flex items-center justify-center group-hover:scale-110 group-hover:bg-violet-500 transition-all duration-300 shadow-lg">
               <Plus className="w-5 h-5" />
             </div>
           </div>
@@ -96,30 +90,24 @@ export default function TutorHome() {
       {/* My Pets */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-base font-bold text-stone-800">Meus Pets</h2>
-          <Link to={createPageUrl("MyPets")} className="text-xs text-orange-500 hover:text-orange-600 flex items-center gap-1 font-medium">
+          <h2 className="text-base font-bold text-stone-900">Meus Pets</h2>
+          <Link to={createPageUrl("MyPets")} className="text-xs text-violet-600 hover:text-violet-700 flex items-center gap-1 font-medium">
             Ver todos <ArrowRight className="w-3 h-3" />
           </Link>
         </div>
         {pets.length === 0 ? (
-          <EmptyState
-            icon={PawPrint}
-            title="Nenhum pet registado"
-            description="Adicione o seu primeiro pet para começar a agendar serviços."
+          <EmptyState icon={PawPrint} title="Nenhum pet registado" description="Adicione o seu primeiro pet para começar a agendar serviços."
             action={
               <Link to={createPageUrl("MyPets")}>
-                <Button className="bg-orange-500 hover:bg-orange-600 text-white">
-                  <Plus className="w-4 h-4 mr-2" />
-                  Adicionar Pet
+                <Button className="bg-stone-950 hover:bg-stone-800 text-white">
+                  <Plus className="w-4 h-4 mr-2" /> Adicionar Pet
                 </Button>
               </Link>
             }
           />
         ) : (
           <div className="grid gap-3 sm:grid-cols-2">
-            {pets.slice(0, 4).map((pet) => (
-              <PetCard key={pet.id} pet={pet} />
-            ))}
+            {pets.slice(0, 4).map((pet) => <PetCard key={pet.id} pet={pet} />)}
           </div>
         )}
       </div>
@@ -127,8 +115,8 @@ export default function TutorHome() {
       {/* Upcoming Appointments */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-base font-bold text-stone-800">Próximas Marcações</h2>
-          <Link to={createPageUrl("MyBookings")} className="text-xs text-orange-500 hover:text-orange-600 flex items-center gap-1 font-medium">
+          <h2 className="text-base font-bold text-stone-900">Próximas Marcações</h2>
+          <Link to={createPageUrl("MyBookings")} className="text-xs text-violet-600 hover:text-violet-700 flex items-center gap-1 font-medium">
             Ver todas <ArrowRight className="w-3 h-3" />
           </Link>
         </div>
@@ -140,7 +128,7 @@ export default function TutorHome() {
               <div key={appt.id} className="bg-white border border-stone-200 rounded-xl p-4 hover:border-stone-300 hover:shadow-sm transition-all shadow-sm">
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
-                    <PawPrint className="w-4 h-4 text-orange-400" />
+                    <PawPrint className="w-4 h-4 text-violet-500" />
                     <span className="font-semibold text-sm text-stone-900">{appt.pet_name}</span>
                   </div>
                   <StatusBadge status={appt.status} />
