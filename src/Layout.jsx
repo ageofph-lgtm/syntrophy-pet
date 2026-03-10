@@ -2,10 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
-import {
-  Home, CalendarDays, PawPrint, ClipboardList,
-  LogOut, Menu, X, Settings, ChevronRight, Store, User
-} from "lucide-react";
+import { Home, CalendarDays, PawPrint, ClipboardList, LogOut, Menu, X, Settings, ChevronRight, Store, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const TUTOR_NAV = [
@@ -43,7 +40,7 @@ export default function Layout({ children, currentPageName }) {
     return (
       <div className="min-h-screen bg-[#F7F5F2] flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-10 h-10 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
+          <div className="w-10 h-10 border-2 border-violet-600 border-t-transparent rounded-full animate-spin" />
           <span className="text-stone-400 text-sm">A carregar...</span>
         </div>
       </div>
@@ -61,39 +58,29 @@ export default function Layout({ children, currentPageName }) {
           <Menu className="w-5 h-5 text-stone-500" />
         </button>
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 bg-orange-50 rounded-lg flex items-center justify-center">
-            <span className="text-orange-500 font-bold text-base">φ</span>
+          <div className="w-7 h-7 bg-violet-50 rounded-lg flex items-center justify-center">
+            <span className="text-violet-600 font-bold text-base">φ</span>
           </div>
           <span className="font-semibold text-sm tracking-wide text-stone-800">Syntrophy</span>
         </div>
         <div className="w-7" />
       </header>
 
-      {/* Mobile Overlay */}
       {sidebarOpen && (
         <div className="lg:hidden fixed inset-0 bg-black/30 z-50" onClick={() => setSidebarOpen(false)} />
       )}
 
       {/* Sidebar */}
-      <aside className={`
-        fixed top-0 left-0 h-full z-50
-        w-64 bg-white border-r border-stone-200
-        transform transition-transform duration-300 ease-out
-        lg:translate-x-0
-        ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
-      `}>
+      <aside className={`fixed top-0 left-0 h-full z-50 w-64 bg-white border-r border-stone-200 transform transition-transform duration-300 ease-out lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
         <div className="flex flex-col h-full">
-          {/* Logo */}
           <div className="px-6 py-6 flex items-center justify-between border-b border-stone-100">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 bg-orange-50 rounded-xl flex items-center justify-center border border-orange-100">
-                <span className="text-orange-500 font-bold text-xl">φ</span>
+              <div className="w-9 h-9 bg-violet-50 rounded-xl flex items-center justify-center border border-violet-100">
+                <span className="text-violet-600 font-bold text-xl">φ</span>
               </div>
               <div>
                 <h1 className="font-bold text-sm tracking-wide text-stone-900">Syntrophy</h1>
-                <p className="text-[10px] text-stone-400 uppercase tracking-widest">
-                  {isLojista ? "Loja" : "Pet Care"}
-                </p>
+                <p className="text-[10px] text-stone-400 uppercase tracking-widest">{isLojista ? "Loja" : "Pet Care"}</p>
               </div>
             </div>
             <button onClick={() => setSidebarOpen(false)} className="lg:hidden p-1">
@@ -101,77 +88,50 @@ export default function Layout({ children, currentPageName }) {
             </button>
           </div>
 
-          {/* Nav */}
           <nav className="flex-1 px-3 py-4 space-y-1">
             {navItems.map((item) => {
               const isActive = currentPageName === item.page;
               return (
-                <Link
-                  key={item.page}
-                  to={createPageUrl(item.page)}
-                  onClick={() => setSidebarOpen(false)}
-                  className={`
-                    flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium
-                    transition-all duration-200
-                    ${isActive
-                      ? "bg-orange-50 text-orange-600 border border-orange-100"
-                      : "text-stone-600 hover:text-stone-900 hover:bg-stone-50"
-                    }
-                  `}
-                >
+                <Link key={item.page} to={createPageUrl(item.page)} onClick={() => setSidebarOpen(false)}
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200
+                    ${isActive ? "bg-violet-50 text-violet-700 border border-violet-100" : "text-stone-600 hover:text-stone-900 hover:bg-stone-50"}`}>
                   <item.icon className="w-4 h-4" />
                   {item.name}
-                  {isActive && <ChevronRight className="w-3 h-3 ml-auto text-orange-400" />}
+                  {isActive && <ChevronRight className="w-3 h-3 ml-auto text-violet-400" />}
                 </Link>
               );
             })}
           </nav>
 
-          {/* User Footer */}
           {user && (
             <div className="px-4 py-4 border-t border-stone-100 space-y-2">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center flex-shrink-0">
-                  <span className="text-orange-600 text-xs font-bold">
-                    {user.full_name?.charAt(0)?.toUpperCase() || "U"}
-                  </span>
+                <div className="w-8 h-8 rounded-full bg-stone-950 flex items-center justify-center flex-shrink-0">
+                  <span className="text-white text-xs font-bold">{user.full_name?.charAt(0)?.toUpperCase() || "U"}</span>
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-semibold text-stone-800 truncate">{user.full_name}</p>
                   <p className="text-[10px] text-stone-400 truncate">{isLojista ? "Lojista" : "Tutor"}</p>
                 </div>
               </div>
-
               {user.role === "admin" && (
-                <Link
-                  to={createPageUrl(isLojista ? "TutorHome" : "ShopDashboard")}
-                  onClick={() => setSidebarOpen(false)}
-                  className="flex items-center gap-2 px-3 py-2 rounded-xl border border-stone-200 hover:border-orange-200 hover:bg-orange-50 transition-all text-xs text-stone-500 hover:text-orange-500"
-                >
+                <Link to={createPageUrl(isLojista ? "TutorHome" : "ShopDashboard")} onClick={() => setSidebarOpen(false)}
+                  className="flex items-center gap-2 px-3 py-2 rounded-xl border border-stone-200 hover:border-violet-200 hover:bg-violet-50 transition-all text-xs text-stone-500 hover:text-violet-600">
                   {isLojista ? <User className="w-3 h-3" /> : <Store className="w-3 h-3" />}
                   {isLojista ? "Ver como Tutor" : "Ir para Loja"}
                 </Link>
               )}
-
-              <Button
-                variant="ghost"
-                size="sm"
-                className="w-full justify-start text-stone-400 hover:text-red-500 hover:bg-red-50 text-xs"
-                onClick={() => base44.auth.redirectToLogin()}
-              >
-                <LogOut className="w-3 h-3 mr-2" />
-                Sair
+              <Button variant="ghost" size="sm" className="w-full justify-start text-stone-400 hover:text-red-500 hover:bg-red-50 text-xs"
+                onClick={() => base44.auth.redirectToLogin()}>
+                <LogOut className="w-3 h-3 mr-2" /> Sair
               </Button>
             </div>
           )}
         </div>
       </aside>
 
-      {/* Main Content */}
       <main className="lg:ml-64 min-h-screen pt-14 lg:pt-0">
-        <div className="p-4 md:p-6 lg:p-8">
-          {children}
-        </div>
+        <div className="p-4 md:p-6 lg:p-8">{children}</div>
       </main>
     </div>
   );
