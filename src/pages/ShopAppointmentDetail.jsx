@@ -9,8 +9,28 @@ import {
   CheckCircle, Play, Image
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 import StatusBadge from "../components/shared/StatusBadge";
 import PetAlertTags from "../components/shared/PetAlertTags";
+
+// ── Substitua pelo URL do Make.com após criar o Webhook ──────────────
+const MAKE_WEBHOOK_URL = "https://hook.eu1.make.com/SEU_URL_AQUI";
+
+async function triggerWhatsAppNotification(appointment, eventType) {
+  if (MAKE_WEBHOOK_URL.includes("SEU_URL_AQUI")) return; // URL não configurado ainda
+  const payload = {
+    event: eventType,
+    appointment_id: appointment.id,
+    client: { name: appointment.owner_name, phone: appointment.owner_phone },
+    pet:    { name: appointment.pet_name,   breed: appointment.pet_breed },
+    service:{ name: appointment.service_names, time: appointment.scheduled_time, date: appointment.scheduled_date },
+  };
+  await fetch(MAKE_WEBHOOK_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+}
 
 export default function ShopAppointmentDetail() {
   const navigate = useNavigate();
