@@ -52,6 +52,16 @@ export default function ShopAppointmentDetail() {
   const updateStatus = async (newStatus) => {
     setUpdating(true);
     await base44.entities.Appointments.update(apptId, { status: newStatus });
+
+    // Disparar notificação WhatsApp nos eventos relevantes
+    if (newStatus === "confirmado") {
+      await triggerWhatsAppNotification(appt, "appointment_confirmed");
+      toast.success("Pedido confirmado — cliente notificado!");
+    } else if (newStatus === "pronto") {
+      await triggerWhatsAppNotification(appt, "service_ready");
+      toast.success("Cliente notificado para recolha!");
+    }
+
     await loadData();
     setUpdating(false);
   };
