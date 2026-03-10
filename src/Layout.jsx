@@ -51,13 +51,13 @@ export default function Layout({ children, currentPageName }) {
           </div>
           <div className="flex flex-col gap-3 w-full mt-4">
             <button
-              onClick={() => base44.auth.redirectToLogin()}
+              onClick={() => { window.location.href = "/login"; }}
               className="w-full py-3 px-6 bg-violet-600 text-white rounded-xl font-semibold text-sm hover:bg-violet-700 active:bg-violet-800 transition-colors"
             >
               Entrar
             </button>
             <button
-              onClick={() => base44.auth.redirectToLogin()}
+              onClick={() => { window.location.href = "/login"; }}
               className="w-full py-3 px-6 bg-white border border-stone-200 text-stone-700 rounded-xl font-semibold text-sm hover:bg-stone-50 active:bg-stone-100 transition-colors"
             >
               Criar conta
