@@ -35,8 +35,7 @@ export default function Layout({ children, currentPageName }) {
   };
 
   const handleLogout = async () => {
-    await base44.auth.logout();
-    setUser(null);
+    base44.auth.logout(window.location.origin);
   };
 
   if (!loading && !user) {
