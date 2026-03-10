@@ -17,7 +17,7 @@ import PetAlertTags from "../components/shared/PetAlertTags";
 const MAKE_WEBHOOK_URL = "https://hook.eu1.make.com/ulab2o1mqjqbhp649irvtrriwz92s3ru";
 
 async function triggerWhatsAppNotification(appointment, eventType) {
-  if (MAKE_WEBHOOK_URL.includes("SEU_URL_AQUI")) return; // URL não configurado ainda
+  // webhook configurado
   const payload = {
     event: eventType,
     appointment_id: appointment.id,
