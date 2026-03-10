@@ -34,8 +34,9 @@ export default function Layout({ children, currentPageName }) {
     setLoading(false);
   };
 
-  const handleLogout = () => {
-    base44.auth.logout();
+  const handleLogout = async () => {
+    await base44.auth.logout();
+    setUser(null);
   };
 
   if (loading) {
