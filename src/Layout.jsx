@@ -39,6 +39,36 @@ export default function Layout({ children, currentPageName }) {
     setUser(null);
   };
 
+  if (!loading && !user) {
+    return (
+      <div className="min-h-screen bg-[#F7F5F2] flex flex-col items-center justify-center px-6">
+        <div className="flex flex-col items-center gap-6 max-w-sm w-full">
+          <div className="w-20 h-20 bg-violet-50 rounded-3xl flex items-center justify-center border border-violet-100 shadow-sm">
+            <span className="text-violet-600 font-bold text-5xl">φ</span>
+          </div>
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-stone-900">Syntrophy Pet</h1>
+            <p className="text-stone-500 mt-2 text-sm">Cuidados premium para o teu pet</p>
+          </div>
+          <div className="flex flex-col gap-3 w-full mt-4">
+            <button
+              onClick={() => base44.auth.redirectToLogin()}
+              className="w-full py-3 px-6 bg-violet-600 text-white rounded-xl font-semibold text-sm hover:bg-violet-700 active:bg-violet-800 transition-colors"
+            >
+              Entrar
+            </button>
+            <button
+              onClick={() => base44.auth.redirectToLogin()}
+              className="w-full py-3 px-6 bg-white border border-stone-200 text-stone-700 rounded-xl font-semibold text-sm hover:bg-stone-50 active:bg-stone-100 transition-colors"
+            >
+              Criar conta
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-[#F7F5F2] flex items-center justify-center">
