@@ -192,7 +192,7 @@ export default function NewBooking() {
             ) : (
               <div className="grid gap-3 sm:grid-cols-2">
                 {pets.map((pet) => (
-                  <PetCard key={pet.id} pet={pet} onSelect={setSelectedPet} selected={selectedPet?.id === pet.id} />
+                  <PetCard key={pet.id} pet={pet} onSelect={(p) => { setSelectedPet(p); setTimeout(() => setStep(1), 150); }} selected={selectedPet?.id === pet.id} />
                 ))}
               </div>
             )}
