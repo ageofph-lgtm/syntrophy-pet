@@ -30,9 +30,7 @@ function generateTimeSlots(workStart, workEnd, durationMinutes, bookedSlots) {
       return t < be && endT > bs;
     });
 
-    if (!isBlocked) {
-      slots.push({ time: timeStr, endTime: endTimeStr });
-    }
+    if (!isBlocked) slots.push({ time: timeStr, endTime: endTimeStr });
   }
   return slots;
 }
@@ -42,46 +40,28 @@ export default function TimeSlotPicker({ duration, selectedDate, selectedTime, o
   const [appointments, setAppointments] = useState([]);
   const [slots, setSlots] = useState([]);
 
-  useEffect(() => {
-    base44.entities.Professionals.list().then(setProfessionals);
-  }, []);
+  useEffect(() => { base44.entities.Professionals.list().then(setProfessionals); }, []);
 
   useEffect(() => {
     if (!selectedDate) return;
-    const dateStr = format(selectedDate, "yyyy-MM-dd");
-    base44.entities.Appointments.filter(
-      { scheduled_date: dateStr, status: { $ne: "cancelado" } }
-    ).then(setAppointments);
+    base44.entities.Appointments.filter({ scheduled_date: format(selectedDate, "yyyy-MM-dd"), status: { $ne: "cancelado" } }).then(setAppointments);
   }, [selectedDate]);
 
   useEffect(() => {
     if (!selectedDate || !duration) return;
-
     const bookedSlots = appointments
-      .filter((a) =>
-        !selectedProfessional || selectedProfessional === "any" || a.professional_id === selectedProfessional
-      )
+      .filter((a) => !selectedProfessional || selectedProfessional === "any" || a.professional_id === selectedProfessional)
       .map((a) => ({ start: a.scheduled_time, end: a.scheduled_end_time }))
       .filter((s) => s.start && s.end);
-
-    const pro = selectedProfessional && selectedProfessional !== "any"
-      ? professionals.find((p) => p.id === selectedProfessional)
-      : null;
-
-    const generated = generateTimeSlots(
-      pro?.work_start || "09:00",
-      pro?.work_end || "18:00",
-      duration,
-      bookedSlots
-    );
-    setSlots(generated);
+    const pro = selectedProfessional && selectedProfessional !== "any" ? professionals.find((p) => p.id === selectedProfessional) : null;
+    setSlots(generateTimeSlots(pro?.work_start || "09:00", pro?.work_end || "18:00", duration, bookedSlots));
   }, [selectedDate, duration, appointments, selectedProfessional, professionals]);
 
   return (
     <div className="space-y-6">
-      {/* Professional Selector */}
+      {/* Professional */}
       <div>
-        <h4 className="text-xs font-semibold text-stone-400 uppercase tracking-wider mb-3">Profissional</h4>
+        <h4 className="text-xs font-bold text-stone-700 uppercase tracking-wider mb-3">Profissional</h4>
         <Select value={selectedProfessional || "any"} onValueChange={onProfessionalChange}>
           <SelectTrigger className="bg-white border-stone-200 text-stone-800">
             <SelectValue placeholder="Qualquer profissional" />
@@ -90,10 +70,7 @@ export default function TimeSlotPicker({ duration, selectedDate, selectedTime, o
             <SelectItem value="any" className="text-stone-500">Qualquer profissional</SelectItem>
             {professionals.filter((p) => p.is_active).map((p) => (
               <SelectItem key={p.id} value={p.id} className="text-stone-800">
-                <div className="flex items-center gap-2">
-                  <User className="w-3 h-3" />
-                  {p.name}
-                </div>
+                <div className="flex items-center gap-2"><User className="w-3 h-3" />{p.name}</div>
               </SelectItem>
             ))}
           </SelectContent>
@@ -102,7 +79,7 @@ export default function TimeSlotPicker({ duration, selectedDate, selectedTime, o
 
       {/* Calendar */}
       <div>
-        <h4 className="text-xs font-semibold text-stone-400 uppercase tracking-wider mb-3">Data</h4>
+        <h4 className="text-xs font-bold text-stone-700 uppercase tracking-wider mb-3">Data</h4>
         <div className="bg-white border border-stone-200 rounded-2xl p-3 inline-block shadow-sm">
           <Calendar
             mode="single"
@@ -118,27 +95,21 @@ export default function TimeSlotPicker({ duration, selectedDate, selectedTime, o
       {/* Time Slots */}
       {selectedDate && (
         <div>
-          <h4 className="text-xs font-semibold text-stone-400 uppercase tracking-wider mb-3">
-            Horários Disponíveis — {format(selectedDate, "d MMM", { locale: pt })}
+          <h4 className="text-xs font-bold text-stone-700 uppercase tracking-wider mb-3">
+            Horários — {format(selectedDate, "d MMM", { locale: pt })}
           </h4>
           {slots.length === 0 ? (
             <p className="text-xs text-stone-400 bg-stone-50 border border-stone-200 rounded-xl p-4 text-center">
-              Nenhum horário disponível para esta data e duração ({duration} min).
+              Nenhum horário disponível para esta data ({duration} min).
             </p>
           ) : (
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2">
               {slots.map((slot) => (
-                <button
-                  key={slot.time}
-                  onClick={() => onTimeChange(slot.time, slot.endTime)}
-                  className={`
-                    p-2.5 rounded-xl border text-center transition-all duration-200
+                <button key={slot.time} onClick={() => onTimeChange(slot.time, slot.endTime)}
+                  className={`p-2.5 rounded-xl border text-center transition-all duration-200
                     ${selectedTime === slot.time
-                      ? "border-orange-400 bg-orange-50 text-orange-600 shadow-sm"
-                      : "border-stone-200 bg-white text-stone-600 hover:border-stone-300 hover:bg-stone-50"
-                    }
-                  `}
-                >
+                      ? "border-violet-500 bg-violet-600 text-white shadow-md"
+                      : "border-stone-200 bg-white text-stone-600 hover:border-stone-300 hover:bg-stone-50"}`}>
                   <div className="flex items-center justify-center gap-1">
                     <Clock className="w-3 h-3" />
                     <span className="text-xs font-medium">{slot.time}</span>
