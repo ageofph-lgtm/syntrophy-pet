@@ -16,17 +16,6 @@ import PetAlertTags from "../components/shared/PetAlertTags";
 // ── Substitua pelo URL do Make.com após criar o Webhook ──────────────
 const MAKE_WEBHOOK_URL = "https://hook.eu1.make.com/ulab2o1mqjqbhp649irvtrriwz92s3ru";
 
-function toGreenApiChatId(raw) {
-  if (!raw) return "";
-  // Remove tudo excepto dígitos
-  let n = raw.replace(/\D/g, "");
-  // Remove leading zeros duplicados (00351 → 351)
-  if (n.startsWith("00351")) n = n.slice(2);
-  // Garantir prefixo 351
-  if (!n.startsWith("351")) n = "351" + n;
-  // GREEN-API exige: 351XXXXXXXXX@c.us
-  return n + "@c.us";
-}
 
 async function triggerWhatsAppNotification(appointment, eventType) {
   // Tentar obter o telefone: primeiro da marcação, depois do perfil do utilizador
