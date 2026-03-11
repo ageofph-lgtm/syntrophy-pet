@@ -14,7 +14,7 @@ import StatusBadge from "../components/shared/StatusBadge";
 import PetAlertTags from "../components/shared/PetAlertTags";
 
 // ── Substitua pelo URL do Make.com após criar o Webhook ──────────────
-const MAKE_WEBHOOK_URL = "https://hook.eu1.make.com/ulab2o1mqjqbhp649irvtrriwz92s3ru";
+const MAKE_WEBHOOK_URL = "https://hook.eu1.make.com/vhkfeegk0b6bq71e21f9x661rplc4app";
 
 
 async function triggerWhatsAppNotification(appointment, eventType) {
