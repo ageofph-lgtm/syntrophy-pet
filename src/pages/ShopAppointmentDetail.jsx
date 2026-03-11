@@ -16,12 +16,21 @@ import PetAlertTags from "../components/shared/PetAlertTags";
 // ── Substitua pelo URL do Make.com após criar o Webhook ──────────────
 const MAKE_WEBHOOK_URL = "https://hook.eu1.make.com/ulab2o1mqjqbhp649irvtrriwz92s3ru";
 
+function normalizePhone(raw) {
+  if (!raw) return "";
+  let n = raw.replace(/[\s\-().]/g, "");
+  if (n.startsWith("00351")) n = "+" + n.slice(2);
+  else if (n.startsWith("351") && n.length >= 12) n = "+" + n;
+  else if (/^[29]\d{8}$/.test(n)) n = "+351" + n;
+  return n;
+}
+
 async function triggerWhatsAppNotification(appointment, eventType) {
-  // webhook configurado
+  const phone = normalizePhone(appointment.owner_phone);
   const payload = {
     event: eventType,
     appointment_id: appointment.id,
-    client: { name: appointment.owner_name, phone: appointment.owner_phone },
+    client: { name: appointment.owner_name, phone },
     pet:    { name: appointment.pet_name,   breed: appointment.pet_breed },
     service:{ name: appointment.service_names, time: appointment.scheduled_time, date: appointment.scheduled_date },
   };
