@@ -174,7 +174,7 @@ export default function NewBooking() {
       </div>
 
       {/* Content */}
-      <div className="mb-24">
+      <div className="mb-36 lg:mb-24">
 
         {/* PET */}
         {currentKey === "pet" && (
