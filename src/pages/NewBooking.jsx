@@ -321,7 +321,7 @@ export default function NewBooking() {
       </div>
 
       {/* Bottom Nav */}
-      <div className="fixed bottom-0 left-0 right-0 lg:left-64 bg-white/95 backdrop-blur border-t border-stone-200 px-4 py-4 flex items-center justify-between">
+      <div className="fixed bottom-16 lg:bottom-0 left-0 right-0 lg:left-64 bg-white/95 backdrop-blur border-t border-stone-200 px-4 py-4 flex items-center justify-between">
         <Button variant="outline" onClick={() => step > 0 ? setStep(step - 1) : navigate(-1)}
           className="border-stone-200 text-stone-600 hover:bg-stone-50">
           <ArrowLeft className="w-4 h-4 mr-2" /> Anterior
