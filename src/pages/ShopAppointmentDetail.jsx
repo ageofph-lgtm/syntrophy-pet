@@ -23,7 +23,7 @@ async function triggerWhatsAppNotification(appointment, eventType) {
   if (!phone && appointment.owner_email) {
     const allUsers = await base44.entities.User.list("-created_date", 200);
     const found = allUsers.find(u => u.email?.toLowerCase() === appointment.owner_email?.toLowerCase());
-    if (found) phone = found.phone || "";
+    if (found) phone = found.data?.phone || "";
   }
 
   // Formatar para Green API: apenas dígitos com prefixo 351
