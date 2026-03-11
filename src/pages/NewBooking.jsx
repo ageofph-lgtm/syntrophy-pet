@@ -102,6 +102,15 @@ export default function NewBooking() {
     return true;
   };
 
+  const normalizePhone = (raw) => {
+    if (!raw) return "";
+    let n = raw.replace(/[\s\-().]/g, "");
+    if (n.startsWith("00351")) n = "+" + n.slice(2);
+    else if (n.startsWith("351") && n.length >= 12) n = "+" + n;
+    else if (/^[29]\d{8}$/.test(n)) n = "+351" + n;
+    return n;
+  };
+
   const handleSubmit = async () => {
     setSubmitting(true);
     const proName = selectedProfessional !== "any" ? professionals.find((p) => p.id === selectedProfessional)?.name : null;
@@ -109,7 +118,7 @@ export default function NewBooking() {
       pet_id: selectedPet.id, pet_name: selectedPet.name, pet_breed: selectedPet.breed,
       pet_weight_kg: selectedPet.weight_kg, pet_behavior: selectedPet.behavior,
       pet_allergies: selectedPet.allergies_medical_info,
-      owner_email: user.email, owner_name: user.full_name,
+      owner_email: user.email, owner_name: user.full_name, owner_phone: normalizePhone(user.phone),
       service_ids: selectedServices.map((s) => s.id).join(","),
       service_names: selectedServices.map((s) => s.name).join(", "),
       professional_id: selectedProfessional !== "any" ? selectedProfessional : "",
