@@ -13,12 +13,8 @@ import { toast } from "sonner";
 import StatusBadge from "../components/shared/StatusBadge";
 import PetAlertTags from "../components/shared/PetAlertTags";
 
-// ── Substitua pelo URL do Make.com após criar o Webhook ──────────────
-const MAKE_WEBHOOK_URL = "https://hook.eu1.make.com/vhkfeegk0b6bq71e21f9x661rplc4app";
-
-
 async function triggerWhatsAppNotification(appointment, eventType) {
-  // Tentar obter o telefone: primeiro da marcação, depois do perfil do utilizador
+  // Obter telefone: da marcação ou do perfil do utilizador
   let phone = appointment.owner_phone;
   if (!phone && appointment.owner_email) {
     const allUsers = await base44.entities.User.list("-created_date", 200);
@@ -26,7 +22,7 @@ async function triggerWhatsAppNotification(appointment, eventType) {
     if (found) phone = found.data?.phone || "";
   }
 
-  // Formatar para Green API: apenas dígitos com prefixo 351
+  // Formatar chatId: apenas dígitos com prefixo 351 + @c.us
   let phoneDigits = phone ? phone.replace(/\D/g, "") : "";
   if (phoneDigits.startsWith("00351")) phoneDigits = phoneDigits.slice(2);
   if (phoneDigits.length > 0 && !phoneDigits.startsWith("351")) phoneDigits = "351" + phoneDigits;
@@ -38,19 +34,14 @@ async function triggerWhatsAppNotification(appointment, eventType) {
     return;
   }
 
-  const payload = {
-    event: eventType,
-    appointment_id: appointment.id,
-    // phone = dígitos apenas (ex: 351912345678) → Make.com pode fazer "phone @c.us"
-    // chatId = formato completo pronto a usar (ex: 351912345678@c.us)
-    client: { name: appointment.owner_name, phone: phoneDigits, chatId },
-    pet:    { name: appointment.pet_name,   breed: appointment.pet_breed },
-    service:{ name: appointment.service_names, time: appointment.scheduled_time, date: appointment.scheduled_date },
-  };
-  await fetch(MAKE_WEBHOOK_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
+  await base44.functions.invoke("sendWhatsApp", {
+    chatId,
+    eventType,
+    ownerName: appointment.owner_name,
+    petName:   appointment.pet_name,
+    petBreed:  appointment.pet_breed,
+    date:      appointment.scheduled_date,
+    time:      appointment.scheduled_time,
   });
 }
 
