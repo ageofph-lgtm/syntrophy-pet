@@ -29,11 +29,17 @@ function toGreenApiChatId(raw) {
 }
 
 async function triggerWhatsAppNotification(appointment, eventType) {
-  const chatId = toGreenApiChatId(appointment.owner_phone);
+  // Se a marcação não tiver telefone, vai buscá-lo ao perfil do utilizador
+  let phone = appointment.owner_phone;
+  if (!phone && appointment.owner_email) {
+    const users = await base44.entities.User.filter({ email: appointment.owner_email });
+    if (users.length > 0) phone = users[0].phone || "";
+  }
+  const chatId = toGreenApiChatId(phone);
   const payload = {
     event: eventType,
     appointment_id: appointment.id,
-    client: { name: appointment.owner_name, phone: appointment.owner_phone, chatId },
+    client: { name: appointment.owner_name, phone, chatId },
     pet:    { name: appointment.pet_name,   breed: appointment.pet_breed },
     service:{ name: appointment.service_names, time: appointment.scheduled_time, date: appointment.scheduled_date },
   };
