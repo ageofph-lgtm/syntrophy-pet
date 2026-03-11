@@ -29,17 +29,32 @@ function toGreenApiChatId(raw) {
 }
 
 async function triggerWhatsAppNotification(appointment, eventType) {
-  // Se a marcação não tiver telefone, vai buscá-lo ao perfil do utilizador
+  // Tentar obter o telefone: primeiro da marcação, depois do perfil do utilizador
   let phone = appointment.owner_phone;
   if (!phone && appointment.owner_email) {
-    const users = await base44.entities.User.filter({ email: appointment.owner_email });
-    if (users.length > 0) phone = users[0].phone || "";
+    const allUsers = await base44.entities.User.list("-created_date", 200);
+    const found = allUsers.find(u => u.email?.toLowerCase() === appointment.owner_email?.toLowerCase());
+    if (found) phone = found.phone || "";
   }
-  const chatId = toGreenApiChatId(phone);
+
+  // Formatar para Green API: apenas dígitos com prefixo 351
+  let phoneDigits = phone ? phone.replace(/\D/g, "") : "";
+  if (phoneDigits.startsWith("00351")) phoneDigits = phoneDigits.slice(2);
+  if (phoneDigits.length > 0 && !phoneDigits.startsWith("351")) phoneDigits = "351" + phoneDigits;
+
+  const chatId = phoneDigits ? phoneDigits + "@c.us" : "";
+
+  if (!chatId) {
+    console.error("Sem telefone para enviar WhatsApp:", appointment.owner_email);
+    return;
+  }
+
   const payload = {
     event: eventType,
     appointment_id: appointment.id,
-    client: { name: appointment.owner_name, phone, chatId },
+    // phone = dígitos apenas (ex: 351912345678) → Make.com pode fazer "phone @c.us"
+    // chatId = formato completo pronto a usar (ex: 351912345678@c.us)
+    client: { name: appointment.owner_name, phone: phoneDigits, chatId },
     pet:    { name: appointment.pet_name,   breed: appointment.pet_breed },
     service:{ name: appointment.service_names, time: appointment.scheduled_time, date: appointment.scheduled_date },
   };
