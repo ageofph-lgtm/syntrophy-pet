@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -6,38 +6,50 @@ import { Plus, CalendarDays, ArrowRight, PawPrint, AlertTriangle } from "lucide-
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { pt } from "date-fns/locale";
+import { useQuery } from "@tanstack/react-query";
 import PetCard from "../components/tutor/PetCard";
 import StatusBadge from "../components/shared/StatusBadge";
 import EmptyState from "../components/shared/EmptyState";
+import LiveTrackingCard from "../components/tutor/LiveTrackingCard";
+import { SkeletonPetCard, SkeletonAppointmentRow } from "../components/shared/SkeletonCard";
+
+const today = format(new Date(), "yyyy-MM-dd");
 
 export default function TutorHome() {
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
-  const [pets, setPets] = useState([]);
-  const [appointments, setAppointments] = useState([]);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => { loadData(); }, []);
+  const { data: user, isSuccess: userSuccess } = useQuery({
+    queryKey: ["me"],
+    queryFn: () => base44.auth.me(),
+  });
 
-  const loadData = async () => {
-    const u = await base44.auth.me();
-    setUser(u);
-    const [p, a] = await Promise.all([
-      base44.entities.Pets.filter({ owner_email: u.email }, "-created_date", 10),
-      base44.entities.Appointments.filter({ owner_email: u.email, status: { $ne: "cancelado" } }, "-scheduled_date", 5),
-    ]);
-    setPets(p); setAppointments(a); setLoading(false);
-    if (!u.phone && p.length === 0 && u.role !== "admin") navigate(createPageUrl("Onboarding"));
-  };
+  const { data: pets = [], isLoading: petsLoading, isSuccess: petsSuccess } = useQuery({
+    queryKey: ["pets", user?.email],
+    queryFn: () => base44.entities.Pets.filter({ owner_email: user.email }, "-created_date", 10),
+    enabled: !!user?.email,
+  });
 
-  if (loading) return (
-    <div className="flex items-center justify-center py-20">
-      <div className="w-8 h-8 border-2 border-violet-600 border-t-transparent rounded-full animate-spin" />
-    </div>
-  );
+  const { data: appointments = [], isLoading: apptLoading } = useQuery({
+    queryKey: ["appointments-home", user?.email],
+    queryFn: () => base44.entities.Appointments.filter(
+      { owner_email: user.email, status: { $ne: "cancelado" } },
+      "-scheduled_date", 5
+    ),
+    enabled: !!user?.email,
+  });
+
+  useEffect(() => {
+    if (userSuccess && petsSuccess && user && !user.phone && pets.length === 0 && user.role !== "admin") {
+      navigate(createPageUrl("Onboarding"));
+    }
+  }, [userSuccess, petsSuccess, user, pets]);
 
   const vaccineWarnings = pets.filter((p) =>
     p.rabies_vaccine_expiry && new Date(p.rabies_vaccine_expiry) < new Date(Date.now() + 15 * 24 * 60 * 60 * 1000)
+  );
+
+  const liveAppointment = appointments.find(
+    (a) => a.scheduled_date === today && ["confirmado", "em_andamento", "pronto"].includes(a.status)
   );
 
   return (
@@ -46,7 +58,7 @@ export default function TutorHome() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-stone-900">
-            Olá, {user?.full_name?.split(" ")[0]} 👋
+            Olá, {user?.full_name?.split(" ")[0] || "..."} 👋
           </h1>
           <p className="text-sm text-stone-400 mt-1">O ecossistema de bem-estar do seu pet.</p>
         </div>
@@ -69,6 +81,9 @@ export default function TutorHome() {
           ))}
         </div>
       )}
+
+      {/* Live Tracking */}
+      {liveAppointment && <LiveTrackingCard appointment={liveAppointment} />}
 
       {/* CTA */}
       <Link to={createPageUrl("NewBooking")}>
@@ -95,7 +110,11 @@ export default function TutorHome() {
             Ver todos <ArrowRight className="w-3 h-3" />
           </Link>
         </div>
-        {pets.length === 0 ? (
+        {petsLoading ? (
+          <div className="grid gap-3 sm:grid-cols-2">
+            <SkeletonPetCard /><SkeletonPetCard />
+          </div>
+        ) : pets.length === 0 ? (
           <EmptyState icon={PawPrint} title="Nenhum pet registado" description="Adicione o seu primeiro pet para começar a agendar serviços."
             action={
               <Link to={createPageUrl("MyPets")}>
@@ -120,7 +139,11 @@ export default function TutorHome() {
             Ver todas <ArrowRight className="w-3 h-3" />
           </Link>
         </div>
-        {appointments.length === 0 ? (
+        {apptLoading ? (
+          <div className="space-y-2">
+            <SkeletonAppointmentRow /><SkeletonAppointmentRow />
+          </div>
+        ) : appointments.length === 0 ? (
           <EmptyState icon={CalendarDays} title="Sem marcações" description="Agende o próximo tratamento do seu pet." />
         ) : (
           <div className="space-y-2">

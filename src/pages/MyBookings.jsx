@@ -1,40 +1,41 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { CalendarDays, PawPrint, Star, Clock, Plus } from "lucide-react";
 import { format } from "date-fns";
 import { pt } from "date-fns/locale";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import StatusBadge from "../components/shared/StatusBadge";
 import EmptyState from "../components/shared/EmptyState";
+import { SkeletonAppointmentRow } from "../components/shared/SkeletonCard";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 
 export default function MyBookings() {
-  const [appointments, setAppointments] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
   const [ratingModal, setRatingModal] = useState(null);
   const [rating, setRating] = useState(0);
 
-  useEffect(() => { loadData(); }, []);
+  const { data: user } = useQuery({
+    queryKey: ["me"],
+    queryFn: () => base44.auth.me(),
+  });
 
-  const loadData = async () => {
-    const u = await base44.auth.me();
-    const a = await base44.entities.Appointments.filter({ owner_email: u.email }, "-scheduled_date");
-    setAppointments(a);
-    setLoading(false);
-  };
+  const { data: appointments = [], isLoading } = useQuery({
+    queryKey: ["appointments", user?.email],
+    queryFn: () => base44.entities.Appointments.filter({ owner_email: user.email }, "-scheduled_date"),
+    enabled: !!user?.email,
+  });
 
-  const submitRating = async () => {
-    await base44.entities.Appointments.update(ratingModal.id, { rating });
-    setRatingModal(null); setRating(0); loadData();
-  };
-
-  if (loading) return (
-    <div className="flex items-center justify-center py-20">
-      <div className="w-8 h-8 border-2 border-violet-600 border-t-transparent rounded-full animate-spin" />
-    </div>
-  );
+  const ratingMutation = useMutation({
+    mutationFn: ({ id, value }) => base44.entities.Appointments.update(id, { rating: value }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["appointments"] });
+      setRatingModal(null);
+      setRating(0);
+    },
+  });
 
   return (
     <div className="max-w-3xl mx-auto animate-fade-in-up">
@@ -47,7 +48,11 @@ export default function MyBookings() {
         </Link>
       </div>
 
-      {appointments.length === 0 ? (
+      {isLoading ? (
+        <div className="space-y-3">
+          {[1, 2, 3].map((i) => <SkeletonAppointmentRow key={i} />)}
+        </div>
+      ) : appointments.length === 0 ? (
         <EmptyState icon={CalendarDays} title="Sem marcações" description="Ainda não agendou nenhum serviço." />
       ) : (
         <div className="space-y-3">
@@ -102,8 +107,12 @@ export default function MyBookings() {
                 </button>
               ))}
             </div>
-            <Button onClick={submitRating} disabled={rating === 0} className="bg-stone-950 hover:bg-stone-800 text-white w-full">
-              Enviar Avaliação
+            <Button
+              onClick={() => ratingMutation.mutate({ id: ratingModal.id, value: rating })}
+              disabled={rating === 0 || ratingMutation.isPending}
+              className="bg-stone-950 hover:bg-stone-800 text-white w-full"
+            >
+              {ratingMutation.isPending ? "A enviar..." : "Enviar Avaliação"}
             </Button>
           </div>
         </DialogContent>

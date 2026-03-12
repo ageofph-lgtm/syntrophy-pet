@@ -7,6 +7,7 @@ import { pt } from "date-fns/locale";
 import { CalendarDays, PawPrint, ChevronRight, TrendingUp, Euro, ClipboardList } from "lucide-react";
 import StatusBadge from "../components/shared/StatusBadge";
 import PetAlertTags from "../components/shared/PetAlertTags";
+import { SkeletonStatCard, SkeletonDashboardRow } from "../components/shared/SkeletonCard";
 
 export default function ShopDashboard() {
   const [todayAppts, setTodayAppts] = useState([]);

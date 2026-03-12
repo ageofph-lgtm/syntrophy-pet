@@ -8,6 +8,7 @@ import { Check, X, PawPrint, Clock, CalendarDays, ChevronRight } from "lucide-re
 import { Button } from "@/components/ui/button";
 import PetAlertTags from "../components/shared/PetAlertTags";
 import EmptyState from "../components/shared/EmptyState";
+import { SkeletonDashboardRow } from "../components/shared/SkeletonCard";
 
 export default function ShopOrders() {
   const [pending, setPending] = useState([]);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { Plus, PawPrint, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -7,8 +7,10 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import PetCard from "../components/tutor/PetCard";
 import EmptyState from "../components/shared/EmptyState";
+import { SkeletonPetCard } from "../components/shared/SkeletonCard";
 
 const EMPTY_PET = {
   name: "", species: "cão", breed: "", weight_kg: "", behavior: "calmo",
@@ -17,9 +19,7 @@ const EMPTY_PET = {
 };
 
 export default function MyPets() {
-  const [user, setUser] = useState(null);
-  const [pets, setPets] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
   const [showForm, setShowForm] = useState(false);
   const [editingPet, setEditingPet] = useState(null);
   const [form, setForm] = useState(EMPTY_PET);
@@ -27,15 +27,16 @@ export default function MyPets() {
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [uploadingVaccine, setUploadingVaccine] = useState(false);
 
-  useEffect(() => { loadData(); }, []);
+  const { data: user } = useQuery({
+    queryKey: ["me"],
+    queryFn: () => base44.auth.me(),
+  });
 
-  const loadData = async () => {
-    const u = await base44.auth.me();
-    setUser(u);
-    const p = await base44.entities.Pets.filter({ owner_email: u.email }, "-created_date");
-    setPets(p);
-    setLoading(false);
-  };
+  const { data: pets = [], isLoading } = useQuery({
+    queryKey: ["pets", user?.email],
+    queryFn: () => base44.entities.Pets.filter({ owner_email: user.email }, "-created_date"),
+    enabled: !!user?.email,
+  });
 
   const openForm = (pet) => {
     if (pet) { setEditingPet(pet); setForm({ ...EMPTY_PET, ...pet }); }
@@ -50,14 +51,14 @@ export default function MyPets() {
     else await base44.entities.Pets.create(data);
     setShowForm(false);
     setSaving(false);
-    loadData();
+    queryClient.invalidateQueries({ queryKey: ["pets"] });
   };
 
   const handleDelete = async () => {
     if (!editingPet) return;
     await base44.entities.Pets.delete(editingPet.id);
     setShowForm(false);
-    loadData();
+    queryClient.invalidateQueries({ queryKey: ["pets"] });
   };
 
   const uploadFile = async (file, field, setUploading) => {
@@ -66,14 +67,6 @@ export default function MyPets() {
     setForm((prev) => ({ ...prev, [field]: file_url }));
     setUploading(false);
   };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
-  }
 
   return (
     <div className="max-w-3xl mx-auto animate-fade-in-up">
@@ -84,7 +77,11 @@ export default function MyPets() {
         </Button>
       </div>
 
-      {pets.length === 0 ? (
+      {isLoading ? (
+        <div className="grid gap-3 sm:grid-cols-2">
+          <SkeletonPetCard /><SkeletonPetCard /><SkeletonPetCard />
+        </div>
+      ) : pets.length === 0 ? (
         <EmptyState
           icon={PawPrint}
           title="Nenhum pet registado"
