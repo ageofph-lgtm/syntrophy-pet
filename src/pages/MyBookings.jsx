@@ -26,7 +26,17 @@ export default function MyBookings() {
     queryKey: ["appointments", user?.email],
     queryFn: () => base44.entities.Appointments.filter({ owner_email: user.email }, "-scheduled_date"),
     enabled: !!user?.email,
+    refetchInterval: 30_000,
   });
+
+  // Subscription em tempo real
+  useEffect(() => {
+    if (!user?.email) return;
+    const unsubscribe = base44.entities.Appointments.subscribe(() => {
+      queryClient.invalidateQueries({ queryKey: ["appointments", user.email] });
+    });
+    return () => unsubscribe();
+  }, [user?.email, queryClient]);
 
   const ratingMutation = useMutation({
     mutationFn: ({ id, value }) => base44.entities.Appointments.update(id, { rating: value }),
