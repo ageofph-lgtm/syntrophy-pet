@@ -34,8 +34,11 @@ export default function ShopOrders() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-20">
-        <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
+      <div className="max-w-4xl mx-auto animate-fade-in-up">
+        <div className="bg-stone-200 animate-pulse rounded-lg h-7 w-48 mb-6" />
+        <div className="space-y-3">
+          <SkeletonDashboardRow /><SkeletonDashboardRow /><SkeletonDashboardRow />
+        </div>
       </div>
     );
   }

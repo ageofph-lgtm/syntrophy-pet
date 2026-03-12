@@ -32,8 +32,19 @@ export default function ShopDashboard() {
   };
 
   if (loading) return (
-    <div className="flex items-center justify-center py-20">
-      <div className="w-8 h-8 border-2 border-violet-600 border-t-transparent rounded-full animate-spin" />
+    <div className="max-w-5xl mx-auto animate-fade-in-up">
+      <div className="flex items-center justify-between mb-8">
+        <div className="space-y-2">
+          <div className="bg-stone-200 animate-pulse rounded-lg h-7 w-32" />
+          <div className="bg-stone-200 animate-pulse rounded-lg h-4 w-48" />
+        </div>
+      </div>
+      <div className="grid grid-cols-3 gap-3 mb-8">
+        <SkeletonStatCard /><SkeletonStatCard /><SkeletonStatCard />
+      </div>
+      <div className="space-y-2">
+        <SkeletonDashboardRow /><SkeletonDashboardRow /><SkeletonDashboardRow />
+      </div>
     </div>
   );
 
