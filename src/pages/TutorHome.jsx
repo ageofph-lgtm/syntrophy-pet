@@ -6,18 +6,18 @@ import { Plus, CalendarDays, ArrowRight, PawPrint, AlertTriangle } from "lucide-
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { pt } from "date-fns/locale";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import PetCard from "../components/tutor/PetCard";
 import StatusBadge from "../components/shared/StatusBadge";
 import EmptyState from "../components/shared/EmptyState";
 import LiveTrackingCard from "../components/tutor/LiveTrackingCard";
 import { SkeletonPetCard, SkeletonAppointmentRow } from "../components/shared/SkeletonCard";
 
-const today = format(new Date(), "yyyy-MM-dd");
-
 export default function TutorHome() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
+  // ── Dados base ────────────────────────────────────────────
   const { data: user, isSuccess: userSuccess } = useQuery({
     queryKey: ["me"],
     queryFn: () => base44.auth.me(),
@@ -33,23 +33,38 @@ export default function TutorHome() {
     queryKey: ["appointments-home", user?.email],
     queryFn: () => base44.entities.Appointments.filter(
       { owner_email: user.email, status: { $ne: "cancelado" } },
-      "-scheduled_date", 5
+      "-scheduled_date",
+      10
     ),
     enabled: !!user?.email,
+    // Polling de fallback a cada 30s
+    refetchInterval: 30_000,
   });
 
+  // ── Subscription em tempo real ────────────────────────────
+  useEffect(() => {
+    if (!user?.email) return;
+    const unsubscribe = base44.entities.Appointments.subscribe(() => {
+      queryClient.invalidateQueries({ queryKey: ["appointments-home", user.email] });
+    });
+    return () => unsubscribe();
+  }, [user?.email, queryClient]);
+
+  // ── Redirect onboarding ───────────────────────────────────
   useEffect(() => {
     if (userSuccess && petsSuccess && user && !user.phone && pets.length === 0 && user.role !== "admin") {
       navigate(createPageUrl("Onboarding"));
     }
   }, [userSuccess, petsSuccess, user, pets]);
 
+  // ── Derivações ────────────────────────────────────────────
   const vaccineWarnings = pets.filter((p) =>
     p.rabies_vaccine_expiry && new Date(p.rabies_vaccine_expiry) < new Date(Date.now() + 15 * 24 * 60 * 60 * 1000)
   );
 
+  // Marcação mais recente que está ativa (qualquer data)
   const liveAppointment = appointments.find(
-    (a) => a.scheduled_date === today && ["confirmado", "em_andamento", "pronto"].includes(a.status)
+    (a) => ["confirmado", "em_andamento", "pronto", "concluido"].includes(a.status)
   );
 
   return (
@@ -83,7 +98,9 @@ export default function TutorHome() {
       )}
 
       {/* Live Tracking */}
-      {liveAppointment && <LiveTrackingCard appointment={liveAppointment} />}
+      {!apptLoading && liveAppointment && (
+        <LiveTrackingCard appointment={liveAppointment} />
+      )}
 
       {/* CTA */}
       <Link to={createPageUrl("NewBooking")}>
@@ -159,7 +176,7 @@ export default function TutorHome() {
                 <p className="text-xs text-stone-500 mb-1">{appt.service_names}</p>
                 <div className="flex items-center gap-2 text-[11px] text-stone-400">
                   <CalendarDays className="w-3 h-3" />
-                  {appt.scheduled_date && format(new Date(appt.scheduled_date), "d MMM", { locale: pt })} · {appt.scheduled_time}
+                  {appt.scheduled_date && format(new Date(appt.scheduled_date + "T00:00:00"), "d MMM", { locale: pt })} · {appt.scheduled_time}
                   {appt.professional_name && ` · ${appt.professional_name}`}
                 </div>
               </div>
