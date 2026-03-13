@@ -59,6 +59,8 @@ const AuthenticatedApp = () => {
           }
         />
       ))}
+      <Route path="/PetHealth" element={<LayoutWrapper currentPageName="PetHealth"><PetHealth /></LayoutWrapper>} />
+      <Route path="/ShopCommissions" element={<LayoutWrapper currentPageName="ShopCommissions"><ShopCommissions /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
