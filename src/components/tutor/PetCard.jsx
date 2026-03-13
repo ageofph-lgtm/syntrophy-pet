@@ -1,6 +1,8 @@
 import React from "react";
-import { PawPrint, Weight, AlertTriangle, Pencil } from "lucide-react";
+import { PawPrint, Weight, AlertTriangle, Pencil, HeartPulse } from "lucide-react";
 import PetAlertTags from "../shared/PetAlertTags";
+import { Link } from "react-router-dom";
+import { createPageUrl } from "@/utils";
 
 export default function PetCard({ pet, onEdit, onSelect, selected }) {
   const hasVaccineWarning = pet.rabies_vaccine_expiry &&

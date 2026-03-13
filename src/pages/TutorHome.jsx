@@ -11,6 +11,7 @@ import PetCard from "../components/tutor/PetCard";
 import StatusBadge from "../components/shared/StatusBadge";
 import EmptyState from "../components/shared/EmptyState";
 import LiveTrackingCard from "../components/tutor/LiveTrackingCard";
+import LoyaltyCard from "../components/tutor/LoyaltyCard";
 import { SkeletonPetCard, SkeletonAppointmentRow } from "../components/shared/SkeletonCard";
 
 export default function TutorHome() {

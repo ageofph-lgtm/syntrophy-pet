@@ -87,6 +87,7 @@ function ProfessionalsTab() {
           <div className="space-y-4 mt-4">
             <div><Label className="text-xs text-stone-500">Nome</Label><Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="bg-stone-50 border-stone-200 mt-1" /></div>
             <div><Label className="text-xs text-stone-500">Especialidades</Label><Input value={form.specialties} onChange={(e) => setForm({ ...form, specialties: e.target.value })} placeholder="banho,tosquia,spa" className="bg-stone-50 border-stone-200 mt-1" /></div>
+            <div><Label className="text-xs text-stone-500">Comissão (%)</Label><Input type="number" min="0" max="100" value={form.commission_rate ?? 10} onChange={(e) => setForm({ ...form, commission_rate: Number(e.target.value) })} className="bg-stone-50 border-stone-200 mt-1" /></div>
             <div className="grid grid-cols-2 gap-3">
               <div><Label className="text-xs text-stone-500">Início</Label><Input type="time" value={form.work_start} onChange={(e) => setForm({ ...form, work_start: e.target.value })} className="bg-stone-50 border-stone-200 mt-1" /></div>
               <div><Label className="text-xs text-stone-500">Fim</Label><Input type="time" value={form.work_end} onChange={(e) => setForm({ ...form, work_end: e.target.value })} className="bg-stone-50 border-stone-200 mt-1" /></div>
