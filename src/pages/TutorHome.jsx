@@ -103,6 +103,9 @@ export default function TutorHome() {
         <LiveTrackingCard appointment={liveAppointment} />
       )}
 
+      {/* Loyalty */}
+      {user?.email && <LoyaltyCard ownerEmail={user.email} />}
+
       {/* CTA */}
       <Link to={createPageUrl("NewBooking")}>
         <div className="relative overflow-hidden bg-stone-950 rounded-2xl p-6 cursor-pointer group">

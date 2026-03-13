@@ -31,12 +31,18 @@ export default function PetCard({ pet, onEdit, onSelect, selected }) {
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between">
             <h3 className="font-semibold text-sm text-stone-900">{pet.name}</h3>
-            {onEdit && (
-              <button onClick={(e) => { e.stopPropagation(); onEdit(pet); }}
-                className="p-1 rounded-lg hover:bg-stone-100 text-stone-400 hover:text-stone-600 transition-colors">
-                <Pencil className="w-3.5 h-3.5" />
-              </button>
-            )}
+            <div className="flex items-center gap-1">
+              <Link to={createPageUrl(`PetHealth?petId=${pet.id}`)} onClick={(e) => e.stopPropagation()}
+                className="p-1 rounded-lg hover:bg-violet-50 text-stone-400 hover:text-violet-500 transition-colors">
+                <HeartPulse className="w-3.5 h-3.5" />
+              </Link>
+              {onEdit && (
+                <button onClick={(e) => { e.stopPropagation(); onEdit(pet); }}
+                  className="p-1 rounded-lg hover:bg-stone-100 text-stone-400 hover:text-stone-600 transition-colors">
+                  <Pencil className="w-3.5 h-3.5" />
+                </button>
+              )}
+            </div>
           </div>
           <p className="text-xs text-stone-500 mt-0.5">{pet.breed} · {pet.species}</p>
           <div className="flex items-center gap-3 mt-1.5">
