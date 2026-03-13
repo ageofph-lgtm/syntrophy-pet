@@ -6,7 +6,7 @@ import { pt } from "date-fns/locale";
 import {
   ArrowLeft, PawPrint, Weight, Phone, Mail,
   Clock, CalendarDays, User, Scissors,
-  CheckCircle, Play, Image
+  CheckCircle, Play, Image, UserX
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";

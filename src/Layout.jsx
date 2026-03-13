@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
-import { Home, CalendarDays, PawPrint, ClipboardList, LogOut, Menu, X, Settings, ChevronRight, Store, User } from "lucide-react";
+import { Home, CalendarDays, PawPrint, ClipboardList, LogOut, Menu, X, Settings, ChevronRight, Store, User, TrendingUp } from "lucide-react";
 
 const TUTOR_NAV = [
   { name: "Início", page: "TutorHome", icon: Home },
@@ -14,6 +14,7 @@ const LOJISTA_NAV = [
   { name: "Dashboard", page: "ShopDashboard", icon: Home },
   { name: "Pedidos", page: "ShopOrders", icon: ClipboardList },
   { name: "Agenda", page: "ShopAgenda", icon: CalendarDays },
+  { name: "Comissões", page: "ShopCommissions", icon: TrendingUp },
   { name: "Definições", page: "ShopSettings", icon: Settings },
 ];
 
