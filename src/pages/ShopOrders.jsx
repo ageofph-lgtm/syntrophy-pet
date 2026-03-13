@@ -82,9 +82,16 @@ export default function ShopOrders() {
                       {appt.scheduled_time} — {appt.scheduled_end_time}
                     </span>
                   </div>
-                  <p className="text-xs text-stone-400 mt-1">
-                    Tutor: <span className="text-stone-600">{appt.owner_name}</span>
-                  </p>
+                  <div className="flex items-center gap-2 mt-1 flex-wrap">
+                    <p className="text-xs text-stone-400">
+                      Tutor: <span className="text-stone-600">{appt.owner_name}</span>
+                    </p>
+                    {getNoShowCount(appt.owner_email) > 0 && (
+                      <span className="inline-flex items-center gap-1 text-[9px] font-semibold bg-amber-50 text-amber-600 border border-amber-200 px-1.5 py-0.5 rounded-full">
+                        <UserX className="w-2.5 h-2.5" /> {getNoShowCount(appt.owner_email)}x no-show
+                      </span>
+                    )}
+                  </div>
                   {appt.total_price > 0 && (
                     <p className="text-lg font-bold text-orange-500 mt-3">{appt.total_price.toFixed(2)}€</p>
                   )}
