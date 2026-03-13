@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { format } from "date-fns";
 import { pt } from "date-fns/locale";
-import { Check, X, PawPrint, Clock, CalendarDays, ChevronRight } from "lucide-react";
+import { Check, X, PawPrint, Clock, CalendarDays, ChevronRight, UserX } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import PetAlertTags from "../components/shared/PetAlertTags";
 import EmptyState from "../components/shared/EmptyState";
@@ -12,14 +12,24 @@ import { SkeletonDashboardRow } from "../components/shared/SkeletonCard";
 
 export default function ShopOrders() {
   const [pending, setPending] = useState([]);
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => { loadData(); }, []);
 
   const loadData = async () => {
-    const p = await base44.entities.Appointments.filter({ status: "pendente" }, "-created_date");
+    const [p, u] = await Promise.all([
+      base44.entities.Appointments.filter({ status: "pendente" }, "-created_date"),
+      base44.entities.User.list("-created_date", 200),
+    ]);
     setPending(p);
+    setUsers(u);
     setLoading(false);
+  };
+
+  const getNoShowCount = (email) => {
+    const u = users.find(u => u.email?.toLowerCase() === email?.toLowerCase());
+    return u?.no_show_count || 0;
   };
 
   const handleAccept = async (id) => {
