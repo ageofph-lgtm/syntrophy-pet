@@ -207,6 +207,27 @@ export default function ShopAppointmentDetail() {
               </Button>
             </div>
           )}
+          {(appt.status === "confirmado" || appt.status === "pendente") && (
+            <Button
+              variant="outline"
+              onClick={async () => {
+                setUpdating(true);
+                await updateStatus("cancelado");
+                // Increment no_show_count on user profile
+                const users = await base44.entities.User.list("-created_date", 200);
+                const found = users.find(u => u.email?.toLowerCase() === appt.owner_email?.toLowerCase());
+                if (found) {
+                  await base44.entities.User.update(found.id, { no_show_count: (found.no_show_count || 0) + 1 });
+                }
+                toast.warning("No-Show registado no perfil do cliente.");
+                setUpdating(false);
+              }}
+              disabled={updating}
+              className="w-full border-amber-200 text-amber-600 hover:bg-amber-50 text-sm"
+            >
+              <UserX className="w-4 h-4 mr-2" /> Registar No-Show
+            </Button>
+          )}
           {appt.status === "confirmado" && (
             <Button onClick={() => updateStatus("em_andamento")} disabled={updating} className="w-full bg-blue-500 hover:bg-blue-600 text-white h-14 text-base">
               <Play className="w-5 h-5 mr-2" /> Iniciar Serviço
